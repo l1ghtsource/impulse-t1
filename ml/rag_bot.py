@@ -1,7 +1,6 @@
-from typing import Optional, Dict, Any
-
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from langchain.document_loaders import PyPDFLoader, TextLoader
+from langchain.document_loaders import PyPDFLoader, TextLoader, WebBaseLoader
+from langchain_community.document_loaders.merge import MergedDataLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.chat_models.gigachat import GigaChat
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -9,6 +8,7 @@ from langchain.vectorstores import FAISS
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain.llms import HuggingFacePipeline
+from typing import List, Union, Dict, Any, Optional
 
 
 class EnhancedConversationBufferMemory(ConversationBufferMemory):
@@ -29,8 +29,7 @@ class EnhancedConversationBufferMemory(ConversationBufferMemory):
 class RAGChatBot:
     def __init__(
         self,
-        data_path: str = None,
-        mode: str = 'txt',
+        data_sources: List[str],
         model_name: str = None,
         from_huggingface: bool = True,
         gigachat_api_key: Optional[str] = None,
@@ -40,8 +39,7 @@ class RAGChatBot:
         k_retriever: int = 5,
         save_path: str = 'vector_store.index'
     ):
-        self.data_path = data_path
-        self.mode = mode
+        self.data_sources = data_sources
         self.embeddings_model = embeddings_model
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
@@ -60,7 +58,7 @@ class RAGChatBot:
         self.chat_memory = None
         self.conversation_chain = None
 
-        if self.data_path:
+        if self.data_sources:
             self.documents = self._load_data()
             self.docs = self._split_data()
             self.vector_store = self._create_vector_store()
@@ -92,14 +90,19 @@ class RAGChatBot:
         return result['answer'], result['source_documents']
 
     def _load_data(self):
-        if self.mode == 'txt':
-            loader = TextLoader(self.data_path, autodetect_encoding=True)
-        elif self.mode == 'pdf':
-            loader = PyPDFLoader(self.data_path)
-        else:
-            raise ValueError('Mode must be "txt" or "pdf"')
+        loaders = []
+        for source in self.data_sources:
+            if source.lower().endswith('.txt'):
+                loaders.append(TextLoader(source, autodetect_encoding=True))
+            elif source.lower().endswith('.pdf'):
+                loaders.append(PyPDFLoader(source))
+            elif source.startswith(('http://', 'https://')):
+                loaders.append(WebBaseLoader(source))
+            else:
+                raise ValueError(f'Unsupported source format: {source}')
 
-        return loader.load()
+        merged_loader = MergedDataLoader(loaders=loaders)
+        return merged_loader.load()
 
     def _split_data(self):
         text_splitter = RecursiveCharacterTextSplitter(
@@ -134,11 +137,16 @@ class RAGChatBot:
         return vector_store
 
 # gigachat_bot = RAGChatBot(
-#         data_path='/content/Bulgakov_Mihail_Master_i_Margarita_Readli.Net_bid256_5c1f5.txt',
-#         mode='txt',
-#         from_huggingface=False,
-#         gigachat_api_key='',
-#         embeddings_model= 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
+#     data_sources=['/content/2408.17352v1.pdf', '/content/Bulgakov_Mihail_Master_i_Margarita_Readli.Net_bid256_5c1f5.txt', 'https://t1.ru/'],
+#     from_huggingface=False,
+#     gigachat_api_key='',
+#     embeddings_model= 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
 # )
 
-# response = gigachat_bot.chat('question')
+# huggingface_bot = RAGChatBot(
+#     data_sources=['/path/to/your/document.txt'],
+#     model_name='google/gemma-2-9b-it',
+#     from_huggingface=True,
+# )
+
+# ans, _ = huggingface_bot.chat('что такое т1 облако')
