@@ -1,0 +1,39 @@
+Dmitry Konoplyannikov
+Dmitry Konoplyannikov
+Full-Stack Developer
+📍Moscow, Russia
+Never Give Up!
+🧑‍💻GitHub
+🏆Achievements
+🌐WebSite(in progress)
+Experience
+Кокос Hack 2024 🥇🏆
+Gagarin Hack 2024  🥈
+Tender Hack 2024 → 6 place
+Skills
+Frontend
+🕸ReactJS, 💚VueJS
+🪶CSS/SCSS
+🌐HTML/JS
+Backend
+🐍Python(FastAPI, Django)
+🥷🏻Golang
+🐘PostgreSQL/SQLite
+DevOps
+👽Git/GitHub/GitLab
+🐳Docker, docker-compose
+🤖Traefik, Nginx
+Languages
+🇷🇺Russian (Native)
+🇬🇧English (B1)
+Education and Courses🎓
+National Univeristy of Science & Technology ”MISIS”  – September 2023 - May 2027 (Intelligent systems for data analysis)
+ITAM: “Docker Course”, “Frontend”, “Python Backend”, “Golang Ninja”, “Big Golang”
+Yandex Practicum: “Основы работы с Git”
+Contacts: 
+📞+7 (903) 023-41-62
+✉️Email:  dkonopliannikov05@gmail.com 
+✈️Telegram
+Notion uses cookies. See Cookie Notice for details.
+Accept all
+Reject all
