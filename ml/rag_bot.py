@@ -9,6 +9,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain.llms import HuggingFacePipeline
 from typing import List, Union, Dict, Any, Optional
+import os
 
 
 class EnhancedConversationBufferMemory(ConversationBufferMemory):
@@ -29,7 +30,7 @@ class EnhancedConversationBufferMemory(ConversationBufferMemory):
 class RAGChatBot:
     def __init__(
         self,
-        data_sources: List[str],
+        data_sources: List[tuple],
         model_name: str = None,
         from_huggingface: bool = True,
         gigachat_api_key: Optional[str] = None,
@@ -59,8 +60,8 @@ class RAGChatBot:
         self.conversation_chain = None
 
         if self.data_sources:
-            self.documents = self._load_data()
-            self.docs = self._split_data()
+            self.documents = self._load_data(self.data_sources)
+            self.docs = self._split_data(self.documents)
             self.vector_store = self._create_vector_store()
             self._initialize_conversation_chain()
 
@@ -85,31 +86,37 @@ class RAGChatBot:
     def chat(self, query: str):
         if not self.conversation_chain:
             raise ValueError('Initialize chatbot with documents first')
-        result = self.conversation_chain({"question": query})
+        result = self.conversation_chain({'question': query})
 
         return result['answer'], result['source_documents']
 
-    def _load_data(self):
+    def _load_data(self, sources: List[tuple]):
         loaders = []
-        for source in self.data_sources:
-            if source.lower().endswith('.txt'):
-                loaders.append(TextLoader(source, autodetect_encoding=True))
-            elif source.lower().endswith('.pdf'):
-                loaders.append(PyPDFLoader(source))
-            elif source.startswith(('http://', 'https://')):
-                loaders.append(WebBaseLoader(source))
+        for mode, source in sources:
+            if mode == 'file':
+                if source.lower().endswith('.txt'):
+                    loaders.append(TextLoader(source, autodetect_encoding=True))
+                elif source.lower().endswith('.pdf'):
+                    loaders.append(PyPDFLoader(source))
+                else:
+                    raise ValueError(f'Unsupported file format: {source}')
+            elif mode == "service":
+                if source.startswith(('http://', 'https://')):
+                    loaders.append(WebBaseLoader(source))
+                else:
+                    raise ValueError(f'Unsupported URL format: {source}')
             else:
-                raise ValueError(f'Unsupported source format: {source}')
+                raise ValueError(f'Unsupported mode: {mode}')
 
         merged_loader = MergedDataLoader(loaders=loaders)
         return merged_loader.load()
 
-    def _split_data(self):
+    def _split_data(self, documents):
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,
         )
-        return text_splitter.split_documents(self.documents)
+        return text_splitter.split_documents(documents)
 
     def _get_embeddings(self, retriever: str = None):
         return HuggingFaceEmbeddings(model_name=retriever or self.embeddings_model)
@@ -128,25 +135,54 @@ class RAGChatBot:
         return llm
 
     def _create_vector_store(self):
-        vector_store = FAISS.from_documents(
-            documents=self.docs,
-            embedding=self.embeddings
-        )
-        vector_store.save_local(self.save_path)
-        print(f'Vector store saved to {self.save_path}')
+        if os.path.exists(self.save_path):
+            print(f'Loading existing vector store from {self.save_path}')
+            vector_store = FAISS.load_local(self.save_path, self.embeddings, allow_dangerous_deserialization=True)
+        else:
+            print(f'Creating new vector store and saving to {self.save_path}')
+            vector_store = FAISS.from_documents(
+                documents=self.docs,
+                embedding=self.embeddings
+            )
+            vector_store.save_local(self.save_path)
         return vector_store
 
+    def add_sources(self, new_sources: List[tuple]):
+        new_documents = self._load_data(new_sources)
+        new_docs = self._split_data(new_documents)
+
+        self.vector_store.add_documents(new_docs)
+        self.vector_store.save_local(self.save_path)
+
+        self.data_sources.extend(new_sources)
+        print(f'Successfully added {len(new_sources)} new sources to the chatbot.')
+
+
 # gigachat_bot = RAGChatBot(
-#     data_sources=['/content/2408.17352v1.pdf', '/content/Bulgakov_Mihail_Master_i_Margarita_Readli.Net_bid256_5c1f5.txt', 'https://t1.ru/'],
+#     save_path='vector_store_1',
+#     data_sources=[
+#         ('file', '/content/2408.17352v1.pdf'),
+#         ('file', '/content/Bulgakov_Mihail_Master_i_Margarita_Readli.Net_bid256_5c1f5.txt')
+#     ],
 #     from_huggingface=False,
-#     gigachat_api_key='',
-#     embeddings_model= 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
+#     gigachat_api_key='NjBiZDkyMTItOTVlYi00ZGE4LTlmM2YtNGExZWVhZTQ3MDQxOjhiMTAxN2Y2LWRiM2QtNDhiMS1hZTNkLTc3MjA2MDAzNDA1OA==',
+#     embeddings_model='sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2',
 # )
+
+# gigachat_bot.add_sources([
+#     ('service', 'https://t1.ru/'),
+# ])
+
+# ans, _ = gigachat_bot.chat('что такое т1 облако')
+
 
 # huggingface_bot = RAGChatBot(
-#     data_sources=['/path/to/your/document.txt'],
-#     model_name='google/gemma-2-9b-it',
+#     save_path='vector_store_2',
+#     data_sources=[
+#         ('file', '/content/2408.17352v1.pdf'),
+#         ('file', '/content/Bulgakov_Mihail_Master_i_Margarita_Readli.Net_bid256_5c1f5.txt')
+#     ],
 #     from_huggingface=True,
+#     model_name='google/gemma-2-9b-it',
+#     embeddings_model='sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2',
 # )
-
-# ans, _ = huggingface_bot.chat('что такое т1 облако')
