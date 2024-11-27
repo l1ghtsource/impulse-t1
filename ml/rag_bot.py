@@ -316,6 +316,7 @@ class RAGChatBot:
 #         ('file', '/content/file_example_XLSX_1000.xlsx'), # EXCEL
 #         ('file', '/content/pohmele.mp3'), # AUDIO
 #         ('confluence', {'url': 'https://yoursite.atlassian.com/wiki', 'username': 'me', 'api_key': '12345', 'space_key': 'SPACE', 'limit': 50}), # CONFLUENCE
+#         ('url', 'https://t1.ru/'), # ANY URL
 #     ],
 #     from_huggingface=False,
 #     gigachat_api_key='NjBiZDkyMTItOTVlYi00ZGE4LTlmM2YtNGExZWVhZTQ3MDQxOjhiMTAxN2Y2LWRiM2QtNDhiMS1hZTNkLTc3MjA2MDAzNDA1OA==',
