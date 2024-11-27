@@ -157,6 +157,18 @@ class RAGChatBot:
         self.data_sources.extend(new_sources)
         print(f'Successfully added {len(new_sources)} new sources to the chatbot.')
 
+    def remove_sources(self, sources_to_remove: List[tuple]):
+        self.data_sources = [
+            source for source in self.data_sources if source not in sources_to_remove
+        ]
+
+        self.documents = self._load_data(self.data_sources)
+        self.docs = self._split_data(self.documents)
+
+        self.vector_store = FAISS.from_documents(self.docs, self.embeddings)
+        self.vector_store.save_local(self.save_path)
+        print(f'Successfully removed {len(sources_to_remove)} new sources from the chatbot.')
+
 
 # gigachat_bot = RAGChatBot(
 #     save_path='vector_store_1',
@@ -170,6 +182,12 @@ class RAGChatBot:
 # )
 
 # gigachat_bot.add_sources([
+#     ('service', 'https://t1.ru/'),
+# ])
+
+# ans, _ = gigachat_bot.chat('что такое т1 облако')
+
+# gigachat_bot.remove_sources([
 #     ('service', 'https://t1.ru/'),
 # ])
 
