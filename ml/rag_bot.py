@@ -1,13 +1,14 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from langchain.document_loaders import PyPDFLoader, TextLoader, WebBaseLoader, BSHTMLLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
+from langchain_community.document_loaders.github import GithubFileLoader
 from langchain_community.document_loaders import (
     UnstructuredMarkdownLoader,
     JSONLoader,
     UnstructuredXMLLoader,
     UnstructuredExcelLoader,
     ConfluenceLoader,
-    UnstructuredWordDocumentLoader
+    UnstructuredWordDocumentLoader,
 )
 from langchain_community.document_loaders.merge import MergedDataLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -183,6 +184,13 @@ class RAGChatBot:
                     limit=limit,
                 )
                 loaders.append(loader)
+            elif mode == 'github':
+                loaders.append(
+                    GithubFileLoader(
+                        repo=source,
+                        access_token='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'
+                    )
+                )
             else:
                 raise ValueError(f'Unsupported mode: {mode}')
 
@@ -325,6 +333,7 @@ class RAGChatBot:
 #         ('file', '/content/1.xml'), # XML
 #         ('file', '/content/file_example_XLSX_1000.xlsx'), # EXCEL
 #         ('file', '/content/pohmele.mp3'), # AUDIO
+#         ('github', 'l1ghtsource/media-searcher') # GITHUB REPO
 #         ('confluence', {'url': 'https://yoursite.atlassian.com/wiki', 'username': 'me', 'api_key': '12345', 'space_key': 'SPACE', 'limit': 50}), # CONFLUENCE
 #         ('url', 'https://t1.ru/'), # ANY URL
 #     ],
