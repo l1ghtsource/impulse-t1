@@ -1,10 +1,9 @@
 import React, {useState} from "react";
 import styles from "./CreatePage.module.scss";
-import {Button, Slider, Steps, Upload} from "antd";
-import Search from "antd/es/input/Search";
-import TextArea from "antd/es/input/TextArea";
+import {Steps} from "antd";
 import Step0 from "./Step0";
 import Step1 from "./Step1";
+import Step2 from "./Step2";
 
 const CreatePage = () => {
 	const [step, setStep] = useState(0);
@@ -23,6 +22,7 @@ const CreatePage = () => {
 		{
 			title: "Шаг 3",
 			subTitle: "Настройка визуала",
+			onClick: () => setStep(2),
 		},
 	];
 
@@ -37,6 +37,9 @@ const CreatePage = () => {
 			:	null}
 			{step === 1 ?
 				<Step1 setStep={setStep} />
+			:	null}
+			{step === 2 ?
+				<Step2 />
 			:	null}
 		</div>
 	);

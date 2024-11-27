@@ -3,9 +3,9 @@ import {useDispatch} from "react-redux";
 import classnames from "classnames";
 import styles from "./ActionButton.module.scss";
 import {addService, removeSomeThing} from "../slices/createBotSlice";
-import {Input, Modal} from "antd";
+import {Input, Modal, Popover} from "antd";
 
-const ActionButton = ({index, input, handler, type, data}) => {
+const ActionButton = ({index, input, handler, type, data, hover = false}) => {
 	const [popup, setPopup] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [value, setValue] = useState("");
@@ -25,7 +25,6 @@ const ActionButton = ({index, input, handler, type, data}) => {
 
 	const handleRemove = (e, name) => {
 		e.stopPropagation();
-		console.log(input, name, type);
 		dispatch(removeSomeThing({docType: input, name, type})); // Передаем объект payload
 	};
 
@@ -45,6 +44,25 @@ const ActionButton = ({index, input, handler, type, data}) => {
 			document.removeEventListener("mousedown", closePopup);
 		};
 	}, []);
+
+	if (type === "prompt") {
+		const content = <div className={styles.promtDesc}>{hover}</div>;
+		return (
+			<Popover content={content}>
+				<div className={classnames(styles.card, data === input && styles.active)} onClick={() => handler(input, hover)}>
+					<div className={styles.ltext}>{input}</div>
+				</div>
+			</Popover>
+		);
+	}
+
+	if (type === "activeLlm" || type === "activeRetriver") {
+		return (
+			<div className={classnames(styles.card, data === input && styles.active)} onClick={() => handler(type, input)}>
+				<div className={styles.text}>{input}</div>
+			</div>
+		);
+	}
 
 	if (type === "services") {
 		return (
