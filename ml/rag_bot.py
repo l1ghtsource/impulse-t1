@@ -1,5 +1,6 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from langchain.document_loaders import PyPDFLoader, TextLoader, WebBaseLoader, BSHTMLLoader
+from langchain_community.document_loaders.youtube import YoutubeLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.document_loaders.github import GithubFileLoader
 from langchain_community.document_loaders import (
@@ -188,9 +189,15 @@ class RAGChatBot:
                 loaders.append(
                     GithubFileLoader(
                         repo=source,
-                        access_token='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'
+                        access_token='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',
+                        github_api_url="https://api.github.com",
+                        file_filter=lambda file_path: file_path.endswith(
+                            ".md"
+                        ),
                     )
                 )
+            elif mode == 'youtube':
+                loaders.append(YoutubeLoader(source, language='ru'))
             else:
                 raise ValueError(f'Unsupported mode: {mode}')
 
@@ -335,6 +342,7 @@ class RAGChatBot:
 #         ('file', '/content/pohmele.mp3'), # AUDIO
 #         ('github', 'l1ghtsource/media-searcher') # GITHUB REPO
 #         ('confluence', {'url': 'https://yoursite.atlassian.com/wiki', 'username': 'me', 'api_key': '12345', 'space_key': 'SPACE', 'limit': 50}), # CONFLUENCE
+#         ('youtube', 'OMSm9pZdNzE'), # YOUTUBE VIDEO
 #         ('url', 'https://t1.ru/'), # ANY URL
 #     ],
 #     from_huggingface=False,
