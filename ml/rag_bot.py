@@ -1,5 +1,6 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from langchain.document_loaders import PyPDFLoader, TextLoader, WebBaseLoader
+from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.document_loaders.merge import MergedDataLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.chat_models.gigachat import GigaChat
@@ -123,9 +124,11 @@ class RAGChatBot:
                     loaders.append(TextLoader(source, autodetect_encoding=True))
                 elif source.lower().endswith('.pdf'):
                     loaders.append(PyPDFLoader(source))
+                elif source.lower().endswith('.csv'):
+                    loaders.append(CSVLoader(source))
                 else:
                     raise ValueError(f'Unsupported file format: {source}')
-            elif mode == "service":
+            elif mode == 'url':
                 if source.startswith(('http://', 'https://')):
                     loaders.append(WebBaseLoader(source))
                 else:
@@ -259,7 +262,8 @@ class RAGChatBot:
 #     system_prompt=roles['ресерчер'],
 #     data_sources=[
 #         ('file', '/content/2408.17352v1.pdf'),
-#         ('file', '/content/Bulgakov_Mihail_Master_i_Margarita_Readli.Net_bid256_5c1f5.txt')
+#         ('file', '/content/Bulgakov_Mihail_Master_i_Margarita_Readli.Net_bid256_5c1f5.txt'),
+#         ('file', '/content/sample_submission.csv')
 #     ],
 #     from_huggingface=False,
 #     gigachat_api_key='NjBiZDkyMTItOTVlYi00ZGE4LTlmM2YtNGExZWVhZTQ3MDQxOjhiMTAxN2Y2LWRiM2QtNDhiMS1hZTNkLTc3MjA2MDAzNDA1OA==',
@@ -267,13 +271,13 @@ class RAGChatBot:
 # )
 
 # gigachat_bot.add_sources([
-#     ('service', 'https://t1.ru/'),
+#     ('url', 'https://t1.ru/'),
 # ])
 
 # ans, _ = gigachat_bot.chat('что такое т1 облако')
 
 # gigachat_bot.remove_sources([
-#     ('service', 'https://t1.ru/'),
+#     ('url', 'https://t1.ru/'),
 # ])
 
 # ans, _ = gigachat_bot.chat('что такое т1 облако')
