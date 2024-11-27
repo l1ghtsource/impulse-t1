@@ -2,20 +2,33 @@
 from datetime import datetime
 from typing import Any, Dict
 from pydantic import BaseModel, Field
-from sqlalchemy import JSON
 
-class Assistant(BaseModel):
-    id: int = Field(title='id конструктора')
-
+class AssistantBase(BaseModel):
+    name: str = Field(title='Название ассистента')
     id_llm: int = Field(title='id llm-модели')
     id_retriever: str = Field(title='id ретривера')
 
     input_type: str = Field(title='Тип входа')
     prompt: str = Field(title='Промпт модели')
-    settings: Dict[str, Any] = Field(title='Настройки')
+    settings: Dict[str, Any] = Field(title='Настройки') 
 
-    created_at: datetime = Field(title='Дата создания') 
-    updated_at: datetime = Field(title='Дата последнего обновления')
+class AssistantCreate(AssistantBase):
+    pass
+
+class AssistantUpdate(BaseModel):
+    name: str | None = Field(default=None, title='Название ассистента')
+    id_llm: int | None = Field(default=None, title='id llm-модели')
+    id_retriever: str | None = Field(default=None, title='id ретривера')
+
+    input_type: str | None = Field(default=None, title='Тип входа')
+    prompt: str | None = Field(default=None, title='Промпт модели')
+    settings: Dict[str, Any] | None = Field(default=None, title='Настройки')
+
+class Assistant(AssistantBase):
+    id: int
+
+    class Config:
+        from_attributes = True
 
 class Index(BaseModel):
     id: int = Field(title='id индекса')
@@ -29,7 +42,7 @@ class LLM(BaseModel):
     id: int = Field(title='id llm')
 
     name: str = Field(title='Название llm-модели')
-    settings: JSON = Field(title='Настройки llm-модели')
+    settings: Dict[str, Any] = Field(title='Настройки llm-модели')
     created_at: datetime = Field(title='Дата создания') 
     updated_at: datetime = Field(title='Дата последнего обновления')
 
@@ -38,7 +51,7 @@ class RetrieverModel(BaseModel):
     id: int = Field(title='id ретривера')
 
     name: str = Field(title='Название ретривера')
-    settings: JSON = Field(title='Настройки ретривера')
+    settings: Dict[str, Any] = Field(title='Настройки ретривера')
     created_at: datetime = Field(title='Дата создания') 
     updated_at: datetime = Field(title='Дата последнего обновления')
 

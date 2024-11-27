@@ -2,9 +2,9 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from ..database import get_session
-from schemas import ChatRequest, Source, SourceCreate, SourceUpdate
-from rag_bot import RAGChatBot
-from crud import CRUDSource
+from .schemas import AssistantCreate, AssistantUpdate, ChatRequest, Source, SourceCreate, SourceUpdate
+from .rag_bot import RAGChatBot
+from .crud import CRUDSource, CRUDAssistant
 
 data_sources = [
     ('service', 'https://t1.ru/'),
@@ -42,24 +42,35 @@ def delete_source(id_source: int, db: Session = Depends(get_session)):
     return deleted_source
 
 @router.get('/assistants')
-def get_assistants():
-    pass
+def get_assistants(db: Session = Depends(get_session)):
+    assistants = CRUDAssistant.get_assistants(db)
+    return assistants
 
 @router.get('/assistants/{id_assistant}')
-def get_assistant_by_id(id_assistant: int):
-    pass
+def get_assistant_by_id(id_assistant: int, db: Session = Depends(get_session)):
+    assistant = CRUDAssistant.get_assistant(db, id_assistant)
+    if not assistant:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Assistant not found')
+    return assistant
 
 @router.post('/assistants')
-def save_assistant():
-    pass
+def save_assistant(assistant: AssistantCreate, db: Session = Depends(get_session)):
+    new_assistant = CRUDAssistant.create_assistant(db, assistant)
+    return new_assistant
 
 @router.patch('/assistants/{id_assistant}')
-def change_settings_assistant(id_assistant: int):
-    pass
+def change_settings_assistant(id_assistant: int, assistant_update: AssistantUpdate, db: Session = Depends(get_session)):
+    updated_assistant = CRUDAssistant.update_assistant(db, id_assistant, assistant_update)
+    if not updated_assistant:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Assistant not found')
+    return updated_assistant
 
 @router.delete('/assistants/{id_assistant}')
-def delete_assistant(id_assistant: int):
-    pass
+def delete_assistant(id_assistant: int, db: Session = Depends(get_session)):
+    deleted_assistant = CRUDAssistant.delete_assistant(db, id_assistant)
+    if not deleted_assistant:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Assistant not found')
+    return delete_assistant
 
 @router.get('/assistants/{id_assistant}/export')
 def get_code_assistant(id_assistant: int):

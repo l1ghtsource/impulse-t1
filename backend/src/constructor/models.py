@@ -3,7 +3,7 @@ from datetime import datetime
 from ..database import Base
 from sqlalchemy import JSON, DateTime, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 class Assistant(Base):
     __tablename__='assistants'
@@ -17,7 +17,7 @@ class Assistant(Base):
 
     input_type: Mapped[str]
     prompt: Mapped[str]
-    settings: Mapped[JSON]
+    settings: Mapped[Dict[str, Any]] = mapped_column(JSON)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
 
@@ -52,7 +52,7 @@ class LLM(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, unique=True)
 
     name: Mapped[str]
-    settings: Mapped[JSON]
+    settings: Mapped[Dict[str, Any]] = mapped_column(JSON)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
 
@@ -65,7 +65,7 @@ class RetrieverModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, unique=True)
 
     name: Mapped[str]
-    settings: Mapped[JSON]
+    settings: Mapped[Dict[str, Any]] = mapped_column(JSON)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
 
