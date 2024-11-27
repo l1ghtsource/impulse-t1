@@ -57,16 +57,16 @@ class RAGChatBot:
             SYSTEM PROMPT: 
             {self.system_prompt}
 
-            CONTEXT: 
+            Контекст: 
             {{context}}
 
-            QUESTION: 
+            Вопрос: 
             {{question}}
 
-            CHAT HISTORY:
+            История чата:
             {{chat_history}}
 
-            ANSWER:
+            Полезный ответ:
             '''
 
             self.custom_prompt = PromptTemplate(
@@ -186,7 +186,7 @@ class RAGChatBot:
             tokenizer = AutoTokenizer.from_pretrained(model_name)
             model = AutoModelForCausalLM.from_pretrained(model_name)
             pipe = pipeline(
-                'text-generation', model=model, tokenizer=tokenizer, max_new_tokens=512
+                'text-generation', model=model, tokenizer=tokenizer, max_new_tokens=1024
             )
             llm = HuggingFacePipeline(pipeline=pipe)
         else:
@@ -253,17 +253,18 @@ class RAGChatBot:
         SYSTEM PROMPT: 
         {self.system_prompt}
 
-        CONTEXT: 
+        Контекст: 
         {{context}}
 
-        QUESTION: 
+        Вопрос: 
         {{question}}
 
-        CHAT HISTORY:
+        История чата:
         {{chat_history}}
 
-        ANSWER:
+        Полезный ответ:
         '''
+
         self.custom_prompt = PromptTemplate(
             template=self.custom_prompt_template,
             input_variables=['context', 'question', 'chat_history'],
