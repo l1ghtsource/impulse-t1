@@ -1,6 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from langchain.document_loaders import PyPDFLoader, TextLoader, WebBaseLoader, BSHTMLLoader
 from langchain_community.document_loaders.youtube import YoutubeLoader
+from langchain_community.document_loaders.image_captions import ImageCaptionLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.document_loaders.github import GithubFileLoader
 from langchain_community.document_loaders import (
@@ -140,64 +141,111 @@ class RAGChatBot:
         for mode, source in sources:
             if mode == 'file':
                 if source.lower().endswith('.txt'):
-                    loaders.append(TextLoader(source, autodetect_encoding=True))
+                    try:
+                        loaders.append(TextLoader(source, autodetect_encoding=True))
+                    except Exception as e:
+                        raise RuntimeError(f"Error loading .txt file '{source}': {e}")
                 elif source.lower().endswith('.pdf'):
-                    loaders.append(PyPDFLoader(source))
+                    try:
+                        loaders.append(PyPDFLoader(source))
+                    except Exception as e:
+                        raise RuntimeError(f"Error loading .pdf file '{source}': {e}")
                 elif source.lower().endswith(('.doc', '.docx')):
-                    loaders.append(UnstructuredWordDocumentLoader(source))
+                    try:
+                        loaders.append(UnstructuredWordDocumentLoader(source))
+                    except Exception as e:
+                        raise RuntimeError(f"Error loading Word document '{source}': {e}")
                 elif source.lower().endswith('.csv'):
-                    loaders.append(CSVLoader(source))
+                    try:
+                        loaders.append(CSVLoader(source))
+                    except Exception as e:
+                        raise RuntimeError(f"Error loading .csv file '{source}': {e}")
                 elif source.lower().endswith(('.html', '.htm')):
-                    loaders.append(BSHTMLLoader(source))
+                    try:
+                        loaders.append(BSHTMLLoader(source))
+                    except Exception as e:
+                        raise RuntimeError(f"Error loading HTML file '{source}': {e}")
                 elif source.lower().endswith('.md'):
-                    loaders.append(UnstructuredMarkdownLoader(source))
+                    try:
+                        loaders.append(UnstructuredMarkdownLoader(source))
+                    except Exception as e:
+                        raise RuntimeError(f"Error loading Markdown file '{source}': {e}")
                 elif source.lower().endswith('.xml'):
-                    loaders.append(UnstructuredXMLLoader(source))
+                    try:
+                        loaders.append(UnstructuredXMLLoader(source))
+                    except Exception as e:
+                        raise RuntimeError(f"Error loading XML file '{source}': {e}")
                 elif source.lower().endswith('.json'):
-                    loaders.append(JSONLoader(
-                        source,
-                        jq_schema='.',
-                        text_content=False
-                    ))
+                    try:
+                        loaders.append(JSONLoader(
+                            source,
+                            jq_schema='.',
+                            text_content=False
+                        ))
+                    except Exception as e:
+                        raise RuntimeError(f"Error loading JSON file '{source}': {e}")
                 elif source.lower().endswith(('.xls', '.xlsx')):
-                    loaders.append(UnstructuredExcelLoader(source))
+                    try:
+                        loaders.append(UnstructuredExcelLoader(source))
+                    except Exception as e:
+                        raise RuntimeError(f"Error loading Excel file '{source}': {e}")
                 elif source.lower().endswith('.mp3'):
-                    transcription = whisper_model.process_sample(source)
-                    temp_txt_path = '/tmp/transcription.txt'
-                    with open(temp_txt_path, 'w', encoding='utf-8') as f:
-                        f.write(transcription)
-                    loaders.append(TextLoader(temp_txt_path, autodetect_encoding=True))
+                    try:
+                        transcription = whisper_model.process_sample(source)
+                        temp_txt_path = '/tmp/transcription.txt'
+                        with open(temp_txt_path, 'w', encoding='utf-8') as f:
+                            f.write(transcription)
+                        loaders.append(TextLoader(temp_txt_path, autodetect_encoding=True))
+                    except Exception as e:
+                        raise RuntimeError(f"Error processing .mp3 file '{source}': {e}")
                 else:
                     raise ValueError(f'Unsupported file format: {source}')
             elif mode == 'url':
                 if source.startswith(('http://', 'https://')):
-                    loaders.append(WebBaseLoader(source))
+                    try:
+                        loaders.append(WebBaseLoader(source))
+                    except Exception as e:
+                        raise RuntimeError(f"Error loading URL '{source}': {e}")
                 else:
                     raise ValueError(f'Unsupported URL format: {source}')
             elif mode == 'confluence':
-                url, username, api_key, space_key, limit = source['url'], source[
-                    'username'], source['api_key'], source['space_key'], source['limit']
-                loader = ConfluenceLoader(
-                    url=url,
-                    username=username,
-                    api_key=api_key,
-                    space_key=space_key,
-                    limit=limit,
-                )
-                loaders.append(loader)
-            elif mode == 'github':
-                loaders.append(
-                    GithubFileLoader(
-                        repo=source,
-                        access_token='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',
-                        github_api_url="https://api.github.com",
-                        file_filter=lambda file_path: file_path.endswith(
-                            ".md"
-                        ),
+                try:
+                    url, username, api_key, space_key, limit = source['url'], source[
+                        'username'], source['api_key'], source['space_key'], source['limit']
+                    loader = ConfluenceLoader(
+                        url=url,
+                        username=username,
+                        api_key=api_key,
+                        space_key=space_key,
+                        limit=limit,
                     )
-                )
+                    loaders.append(loader)
+                except Exception as e:
+                    raise RuntimeError(f"Error loading Confluence data: {e}")
+            elif mode == 'github':
+                try:
+                    loaders.append(
+                        GithubFileLoader(
+                            repo=source,
+                            access_token='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',
+                            github_api_url='https://api.github.com',
+                            file_filter=lambda file_path: file_path.endswith(
+                                '.md'
+                            ),
+                        )
+                    )
+                except Exception as e:
+                    raise RuntimeError(f"Error loading GitHub repository '{source}': {e}")
             elif mode == 'youtube':
-                loaders.append(YoutubeLoader(source, language='ru'))
+                try:
+                    loaders.append(YoutubeLoader(source, language='ru'))
+                except Exception as e:
+                    raise RuntimeError(f"Error loading YouTube data from '{source}': {e}")
+            elif mode == 'image':
+                try:
+                    loaders.append(ImageCaptionLoader(source))
+                except Exception as e:
+                    raise RuntimeError(f"Error loading image '{source}': {e}")
             else:
                 raise ValueError(f'Unsupported mode: {mode}')
 
@@ -343,6 +391,7 @@ class RAGChatBot:
 #         ('github', 'l1ghtsource/media-searcher') # GITHUB REPO
 #         ('confluence', {'url': 'https://yoursite.atlassian.com/wiki', 'username': 'me', 'api_key': '12345', 'space_key': 'SPACE', 'limit': 50}), # CONFLUENCE
 #         ('youtube', 'OMSm9pZdNzE'), # YOUTUBE VIDEO
+#         ('image', '/content/opz74tkuiuj7gj2ute0yeg0d-sy.jpeg'), # ANY IMAGE
 #         ('url', 'https://t1.ru/'), # ANY URL
 #     ],
 #     from_huggingface=False,
