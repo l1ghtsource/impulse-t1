@@ -1,4 +1,4 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from langchain.document_loaders import PyPDFLoader, TextLoader, WebBaseLoader, BSHTMLLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
@@ -158,7 +158,10 @@ class RAGChatBot:
         if from_huggingface:
             tokenizer = AutoTokenizer.from_pretrained(model_name)
             model = AutoModelForCausalLM.from_pretrained(model_name)
-            llm = HuggingFacePipeline(model=model, tokenizer=tokenizer)
+            pipe = pipeline(
+                'text-generation', model=model, tokenizer=tokenizer, max_new_tokens=512
+            )
+            llm = HuggingFacePipeline(pipeline=pipe)
         else:
             llm = GigaChat(
                 credentials=gigachat_api_key,
