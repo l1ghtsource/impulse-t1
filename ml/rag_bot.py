@@ -1,6 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from langchain.document_loaders import PyPDFLoader, TextLoader, WebBaseLoader, BSHTMLLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
+from langchain_community.document_loaders import UnstructuredMarkdownLoader
 from langchain_community.document_loaders.merge import MergedDataLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.chat_models.gigachat import GigaChat
@@ -128,6 +129,8 @@ class RAGChatBot:
                     loaders.append(CSVLoader(source))
                 elif source.lower().endswith(('.html', '.htm')):
                     loaders.append(BSHTMLLoader(source))
+                elif source.lower().endswith('.md'):
+                    loaders.append(UnstructuredMarkdownLoader(source))
                 else:
                     raise ValueError(f'Unsupported file format: {source}')
             elif mode == 'url':
