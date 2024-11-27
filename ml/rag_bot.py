@@ -1,7 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from langchain.document_loaders import PyPDFLoader, TextLoader, WebBaseLoader, BSHTMLLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
-from langchain_community.document_loaders import UnstructuredMarkdownLoader, JSONLoader
+from langchain_community.document_loaders import UnstructuredMarkdownLoader, JSONLoader, UnstructuredXMLLoader
 from langchain_community.document_loaders.merge import MergedDataLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.chat_models.gigachat import GigaChat
@@ -137,6 +137,8 @@ class RAGChatBot:
                     loaders.append(BSHTMLLoader(source))
                 elif source.lower().endswith('.md'):
                     loaders.append(UnstructuredMarkdownLoader(source))
+                elif source.lower().endswith('.xml'):
+                    loaders.append(UnstructuredXMLLoader(source))
                 elif source.lower().endswith('.json'):
                     loaders.append(JSONLoader(
                         source,
@@ -286,7 +288,8 @@ class RAGChatBot:
 #         ('file', '/content/sample_submission.csv'),
 #         ('file', '/content/https___python.langchain.com_v0.1_docs_modules_data_connection_document_loaders_html_.htm'),
 #         ('file', '/content/README.md'),
-#         ('file', '/content/10kb.json')
+#         ('file', '/content/10kb.json'),
+#         ('file', '/content/1.xml')
 #     ],
 #     from_huggingface=False,
 #     gigachat_api_key='NjBiZDkyMTItOTVlYi00ZGE4LTlmM2YtNGExZWVhZTQ3MDQxOjhiMTAxN2Y2LWRiM2QtNDhiMS1hZTNkLTc3MjA2MDAzNDA1OA==',
