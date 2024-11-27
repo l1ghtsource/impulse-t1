@@ -3,6 +3,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .ping.router import router as ping_router
+from .constructor.router import router as config_router
 from .database import Base, engine
 from dotenv import load_dotenv
 
@@ -28,3 +29,4 @@ app.add_middleware(
 
 #* ROUTERS
 app.include_router(ping_router)
+app.include_router(config_router)
