@@ -169,6 +169,21 @@ class RAGChatBot:
         self.vector_store.save_local(self.save_path)
         print(f'Successfully removed {len(sources_to_remove)} new sources from the chatbot.')
 
+    def change_model(self, new_model_name: str, from_huggingface: bool = True, gigachat_api_key: Optional[str] = None):
+        self.llm = self._get_model(
+            model_name=new_model_name,
+            from_huggingface=from_huggingface,
+            gigachat_api_key=gigachat_api_key
+        )
+        self._initialize_conversation_chain()
+        print(f'Model successfully changed to {new_model_name}.')
+
+    def change_retriever(self, new_embeddings_model: str):
+        self.embeddings = self._get_embeddings(retriever=new_embeddings_model)
+        self.vector_store = self._create_vector_store()
+        self._initialize_conversation_chain()
+        print(f'Retriever successfully changed to {new_embeddings_model}.')
+
 
 # gigachat_bot = RAGChatBot(
 #     save_path='vector_store_1',
@@ -193,6 +208,9 @@ class RAGChatBot:
 
 # ans, _ = gigachat_bot.chat('что такое т1 облако')
 
+# gigachat_bot.change_model(new_model_name='google/gemma-2-9b-it')
+
+# gigachat_bot.change_retriever(new_embeddings_model='sentence-transformers/all-MiniLM-L6-v2')
 
 # huggingface_bot = RAGChatBot(
 #     save_path='vector_store_2',
