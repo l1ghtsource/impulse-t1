@@ -55,6 +55,7 @@ _тут блок-схема всего решения_
 
 - confluence
 - notion
+- github
 - youtube
 - any url
 
