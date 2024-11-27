@@ -67,22 +67,21 @@ class RetrieverModel(BaseModel):
 class ChatRequest(BaseModel):
     question: str
 
-class Source(BaseModel):
-    id: int = Field(title='id источника')
-    
+class SourceBase(BaseModel):  
     name: str = Field(title='Название источника')
     type: str = Field(title='Тип источника')
     url_or_path: str = Field(title='Ссылка или путь до источника')
-    
-    created_at: datetime = Field(title='Дата создания') 
-    updated_at: datetime = Field(title='Дата последнего обновления')
 
-class SourceCreate(BaseModel):
-    name: str = Field(title='Название источника')
-    type: str = Field(title='Тип источника')
-    url_or_path: str = Field(title='Ссылка или путь до источника')
+class SourceCreate(SourceBase):
+    pass
 
 class SourceUpdate(BaseModel):
     name: str | None = Field(default=None, title='Название источника')
     type: str | None = Field(default=None, title='Тип источника')
     url_or_path: str | None = Field(default=None, title='Ссылка или путь до источника')
+
+class Source(SourceBase):
+    id: int = Field(title='id источника')
+
+    class Config:
+        from_attributes = True

@@ -1,7 +1,7 @@
 
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.orm import Session
-from ..database import get_session
+from database import get_session
 from .schemas import AssistantCreate, AssistantUpdate, ChatRequest, LLMCreate, LLMUpdate, Source, SourceCreate, SourceUpdate
 from .rag_bot import RAGChatBot
 from .crud import CRUDLlm, CRUDSource, CRUDAssistant
@@ -17,83 +17,83 @@ router = APIRouter(
     prefix='/config'
 )
 
-@router.get('/sources')
+@router.get('/sources', tags=['Sources'])
 def get_list_sources(db: Session = Depends(get_session)):
     sources = CRUDSource.get_sources(db)
     return sources
 
-@router.post('/sources')
+@router.post('/sources', tags=['Sources'])
 def add_source(source: SourceCreate, db: Session = Depends(get_session)):
     new_source = CRUDSource.create_source(db, source)
     return new_source
 
-@router.put('/sources/{id_source}')
+@router.put('/sources/{id_source}', tags=['Sources'])
 def change_source(id_source: int, source_update: SourceUpdate, db: Session = Depends(get_session)):
     updated_source = CRUDSource.update_source(db, id_source, source_update)
     if not updated_source:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found!")
     return updated_source
 
-@router.delete('/sources/{id_source}')
+@router.delete('/sources/{id_source}', tags=['Sources'])
 def delete_source(id_source: int, db: Session = Depends(get_session)):
     deleted_source = CRUDSource.delete_source(db, id_source)
     if not deleted_source:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found")
     return deleted_source
 
-@router.get('/assistants')
+@router.get('/assistants', tags=['Assistants'])
 def get_assistants(db: Session = Depends(get_session)):
     assistants = CRUDAssistant.get_assistants(db)
     return assistants
 
-@router.get('/assistants/{id_assistant}')
+@router.get('/assistants/{id_assistant}', tags=['Assistants'])
 def get_assistant_by_id(id_assistant: int, db: Session = Depends(get_session)):
     assistant = CRUDAssistant.get_assistant(db, id_assistant)
     if not assistant:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Assistant not found')
     return assistant
 
-@router.post('/assistants')
+@router.post('/assistants', tags=['Assistants'])
 def save_assistant(assistant: AssistantCreate, db: Session = Depends(get_session)):
     new_assistant = CRUDAssistant.create_assistant(db, assistant)
     return new_assistant
 
-@router.patch('/assistants/{id_assistant}')
+@router.patch('/assistants/{id_assistant}', tags=['Assistants'])
 def change_settings_assistant(id_assistant: int, assistant_update: AssistantUpdate, db: Session = Depends(get_session)):
     updated_assistant = CRUDAssistant.update_assistant(db, id_assistant, assistant_update)
     if not updated_assistant:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Assistant not found')
     return updated_assistant
 
-@router.delete('/assistants/{id_assistant}')
+@router.delete('/assistants/{id_assistant}', tags=['Assistants'])
 def delete_assistant(id_assistant: int, db: Session = Depends(get_session)):
     deleted_assistant = CRUDAssistant.delete_assistant(db, id_assistant)
     if not deleted_assistant:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Assistant not found')
     return delete_assistant
 
-@router.get('/assistants/{id_assistant}/export')
+@router.get('/assistants/{id_assistant}/export', tags=['Assistants'])
 def get_code_assistant(id_assistant: int):
     pass
 
-@router.get('/llm')
+@router.get('/llm', tags=['LLM'])
 def get_all_llm_models(db: Session = Depends(get_session)):
     llms = CRUDLlm.get_all_llm(db)
     return llms
 
-@router.post('/llm')
+@router.post('/llm', tags=['LLM'])
 def add_llm_model(llm: LLMCreate, db: Session = Depends(get_session)):
     new_llm = CRUDLlm.create_llm(db, llm)
     return new_llm
 
-@router.get('/llm/{id_llm}/settings')
+@router.get('/llm/{id_llm}/settings', tags=['LLM'])
 def get_settings_llm_by_id(id_llm: int, db: Session = Depends(get_session)):
     llm = CRUDLlm.get_llm_by_id(db, id_llm)
     if not llm:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Llm not found')
     return llm
 
-@router.patch('/llm/{id_llm}/settings')
+@router.patch('/llm/{id_llm}/settings', tags=['LLM'])
 def change_settings_llm_by_id(id_llm: int, llm_update: LLMUpdate, db: Session = Depends(get_session)):
     updated_llm = CRUDLlm.update_llm(db, id_llm, llm_update)
     if not updated_llm:
