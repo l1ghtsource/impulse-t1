@@ -23,6 +23,7 @@ from langchain.llms import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
 from typing import List, Union, Dict, Any, Optional
 from whisper_model import WhisperModel
+from parsers.notion import fetch_and_save_notion_content
 import os
 
 
@@ -208,6 +209,12 @@ class RAGChatBot:
                         raise RuntimeError(f"Error loading URL '{source}': {e}")
                 else:
                     raise ValueError(f'Unsupported URL format: {source}')
+            elif mode == 'notion':
+                try:
+                    path = fetch_and_save_notion_content(source)
+                    loaders.append(TextLoader(path, autodetect_encoding=True))
+                except Exception as e:
+                    raise RuntimeError(f"Error loading Notion Page '{source}': {e}")
             elif mode == 'confluence':
                 try:
                     url, username, api_key, space_key, limit = source['url'], source[
@@ -390,6 +397,7 @@ class RAGChatBot:
 #         ('file', '/content/pohmele.mp3'), # AUDIO
 #         ('github', 'l1ghtsource/media-searcher') # GITHUB REPO
 #         ('confluence', {'url': 'https://yoursite.atlassian.com/wiki', 'username': 'me', 'api_key': '12345', 'space_key': 'SPACE', 'limit': 50}), # CONFLUENCE
+#         ('notion', 'https://quickest-custard-3d3.notion.site/Dmitry-Konoplyannikov-7892b63ba7cb4000b45484147a783bf0'), # NOTION
 #         ('youtube', 'OMSm9pZdNzE'), # YOUTUBE VIDEO
 #         ('image', '/content/opz74tkuiuj7gj2ute0yeg0d-sy.jpeg'), # ANY IMAGE
 #         ('url', 'https://t1.ru/'), # ANY URL

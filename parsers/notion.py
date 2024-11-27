@@ -13,9 +13,9 @@ def fetch_and_save_notion_content(url, file_path='./parsers/results/notion_conte
     user_agent = fake_useragent.UserAgent()
 
     options = webdriver.ChromeOptions()
-    options.add_argument(f"user-agent={user_agent.random}")
-    options.add_argument("--headless")
-    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument(f'user-agent={user_agent.random}')
+    options.add_argument('--headless')
+    options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
     chrome_service = Service(ChromeDriverManager().install())
@@ -26,7 +26,7 @@ def fetch_and_save_notion_content(url, file_path='./parsers/results/notion_conte
     try:
         time.sleep(5)
         WebDriverWait(browser, 60).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
-        print("Страница успешно загружена")
+        print('Страница успешно загружена')
 
         notion_app_element = WebDriverWait(browser, 40).until(
             EC.presence_of_element_located((By.ID, 'notion-app'))
@@ -45,10 +45,10 @@ def fetch_and_save_notion_content(url, file_path='./parsers/results/notion_conte
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(content)
 
-        print(f"Содержимое сохранено в файл: {file_path}")
+        print(f'Содержимое сохранено в файл: {file_path}')
 
     except Exception as e:
-        print(f"Не удалось загрузить страницу или найти элемент {e}")
+        print(f'Не удалось загрузить страницу или найти элемент {e}')
     finally:
         browser.close()
         browser.quit()
@@ -56,7 +56,5 @@ def fetch_and_save_notion_content(url, file_path='./parsers/results/notion_conte
     return os.path.abspath(file_path)
 
 
-# Пример использования функции
-url = 'https://quickest-custard-3d3.notion.site/Dmitry-Konoplyannikov-7892b63ba7cb4000b45484147a783bf0'
-file_path = fetch_and_save_notion_content(url)
-print(f"Путь к файлу: {file_path}")
+# url = 'https://quickest-custard-3d3.notion.site/Dmitry-Konoplyannikov-7892b63ba7cb4000b45484147a783bf0'
+# file_path = fetch_and_save_notion_content(url)
