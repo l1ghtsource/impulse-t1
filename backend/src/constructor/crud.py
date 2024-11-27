@@ -24,7 +24,7 @@ def update_source(db: Session, id_source: int, source_update: SourceUpdate):
     db_source = get_source(db, id_source)
     if not db_source:
         return None
-    update_data = source_update.dict(exclude_unset=True)
+    update_data = source_update.model_dump(exclude_unset=True)
     db.query(Source).filter(Source.id == id_source).update(update_data)
     db.commit()
     db.refresh(db_source)
