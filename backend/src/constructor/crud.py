@@ -1,7 +1,7 @@
 
 from sqlalchemy.orm import Session
-from .models import Source, Assistant
-from .schemas import AssistantCreate, AssistantUpdate, SourceCreate, SourceUpdate
+from .models import LLM, Source, Assistant
+from .schemas import AssistantCreate, AssistantUpdate, LLMCreate, LLMUpdate, SourceCreate, SourceUpdate
 
 class CRUDSource:
 
@@ -90,3 +90,37 @@ class CRUDAssistant:
         db.delete(db_assistant)
         db.commit()
         return db_assistant
+    
+class CRUDLlm:
+
+    @staticmethod
+    def get_all_llm(db: Session):
+        return db.query(LLM).all()
+    
+    @staticmethod
+    def get_llm_by_id(db: Session, id_llm: int):
+        return db.query(LLM).where(LLM.id == id_llm).first()
+    
+    @staticmethod
+    def create_llm(db: Session, llm: LLMCreate):
+        db_llm = LLM(
+            name=llm.name,
+            settings=llm.settings
+        )
+        db.add(db_llm)
+        db.commit()
+        db.refresh(db_llm)
+        return db_llm
+    
+    @staticmethod
+    def update_llm(db: Session, id_llm: int, llm_update: LLMUpdate):
+        db_llm = CRUDLlm.get_llm_by_id(db, id_llm)
+        if not db_llm:
+            return None
+        update_data = llm_update.model_dump(exclude_unset=True)
+        db.query(LLM).where(LLM.id == id_llm).update(update_data)
+        db.commit()
+        db.refresh(db_llm)
+        return db_llm
+        
+    

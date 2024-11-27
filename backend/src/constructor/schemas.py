@@ -38,13 +38,22 @@ class Index(BaseModel):
     created_at: datetime = Field(title='Дата создания') 
     updated_at: datetime = Field(title='Дата последнего обновления')
 
-class LLM(BaseModel):
-    id: int = Field(title='id llm')
-
+class LLMBase(BaseModel):
     name: str = Field(title='Название llm-модели')
     settings: Dict[str, Any] = Field(title='Настройки llm-модели')
-    created_at: datetime = Field(title='Дата создания') 
-    updated_at: datetime = Field(title='Дата последнего обновления')
+
+class LLMCreate(LLMBase):
+    pass
+
+class LLMUpdate(BaseModel):
+    name: str | None = Field(default=None, title='Название llm-модели')
+    settings: Dict[str, Any] | None = Field(default=None, title='Настройки llm-модели')
+
+class LLM(LLMBase):
+    id: int = Field(title='id llm')
+
+    class Config:
+        from_attributes = True
 
 class RetrieverModel(BaseModel):
 

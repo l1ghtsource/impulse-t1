@@ -2,9 +2,9 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from ..database import get_session
-from .schemas import AssistantCreate, AssistantUpdate, ChatRequest, Source, SourceCreate, SourceUpdate
+from .schemas import AssistantCreate, AssistantUpdate, ChatRequest, LLMCreate, LLMUpdate, Source, SourceCreate, SourceUpdate
 from .rag_bot import RAGChatBot
-from .crud import CRUDSource, CRUDAssistant
+from .crud import CRUDLlm, CRUDSource, CRUDAssistant
 
 data_sources = [
     ('service', 'https://t1.ru/'),
@@ -77,16 +77,28 @@ def get_code_assistant(id_assistant: int):
     pass
 
 @router.get('/llm')
-def get_all_llm_models():
-    pass
+def get_all_llm_models(db: Session = Depends(get_session)):
+    llms = CRUDLlm.get_all_llm(db)
+    return llms
+
+@router.post('/llm')
+def add_llm_model(llm: LLMCreate, db: Session = Depends(get_session)):
+    new_llm = CRUDLlm.create_llm(db, llm)
+    return new_llm
 
 @router.get('/llm/{id_llm}/settings')
-def get_settings_llm_by_id(id_llm: int):
-    pass
+def get_settings_llm_by_id(id_llm: int, db: Session = Depends(get_session)):
+    llm = CRUDLlm.get_llm_by_id(db, id_llm)
+    if not llm:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Llm not found')
+    return llm
 
 @router.patch('/llm/{id_llm}/settings')
-def change_settings_llm_by_id(id_llm: int):
-    pass
+def change_settings_llm_by_id(id_llm: int, llm_update: LLMUpdate, db: Session = Depends(get_session)):
+    updated_llm = CRUDLlm.update_llm(db, id_llm, llm_update)
+    if not updated_llm:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Llm not found')
+    return updated_llm
 
 @router.post('/chat')
 def chat(request: ChatRequest):
