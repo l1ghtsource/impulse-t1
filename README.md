@@ -22,6 +22,26 @@ API - [тык]()
 
 ## Предложенное решение
 
+### Поддерживаемые форматы:
+
+#### Документы:
+- pdf
+- txt
+- word (doc, docx)
+- csv
+- html
+- markdown (md)
+- json
+- xml
+- excel (xls, xlsx)
+- audio (mp3)
+- images (jpeg, jpg, png, ...)
+
+#### Сервисы: 
+- confluence
+- youtube
+- any url
+
 ## Сборка
 
 ##### Локалькая сборка:
