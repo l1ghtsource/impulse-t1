@@ -1,7 +1,14 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from langchain.document_loaders import PyPDFLoader, TextLoader, WebBaseLoader, BSHTMLLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
-from langchain_community.document_loaders import UnstructuredMarkdownLoader, JSONLoader, UnstructuredXMLLoader, UnstructuredExcelLoader, ConfluenceLoader
+from langchain_community.document_loaders import (
+    UnstructuredMarkdownLoader,
+    JSONLoader,
+    UnstructuredXMLLoader,
+    UnstructuredExcelLoader,
+    ConfluenceLoader,
+    UnstructuredWordDocumentLoader
+)
 from langchain_community.document_loaders.merge import MergedDataLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.chat_models.gigachat import GigaChat
@@ -134,6 +141,8 @@ class RAGChatBot:
                     loaders.append(TextLoader(source, autodetect_encoding=True))
                 elif source.lower().endswith('.pdf'):
                     loaders.append(PyPDFLoader(source))
+                elif source.lower().endswith(('.doc', '.docx')):
+                    loaders.append(UnstructuredWordDocumentLoader(source))
                 elif source.lower().endswith('.csv'):
                     loaders.append(CSVLoader(source))
                 elif source.lower().endswith(('.html', '.htm')):
@@ -308,7 +317,8 @@ class RAGChatBot:
 #     data_sources=[
 #         ('file', '/content/2408.17352v1.pdf'), # PDF
 #         ('file', '/content/Bulgakov_Mihail_Master_i_Margarita_Readli.Net_bid256_5c1f5.txt'), # TXT
-#         ('file', '/content/sample_submission.csv'),
+#         ('file', '/content/Пример №1.docx_[regforum].docx'), # WORD
+#         ('file', '/content/sample_submission.csv'), # CSV
 #         ('file', '/content/https___python.langchain.com_v0.1_docs_modules_data_connection_document_loaders_html_.htm'), # HTML
 #         ('file', '/content/README.md'), # MARKDOWN
 #         ('file', '/content/10kb.json'), # JSON
