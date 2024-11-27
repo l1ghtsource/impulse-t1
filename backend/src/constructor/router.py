@@ -2,8 +2,9 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from ..database import get_session
-from schemas import ChatRequest
+from schemas import ChatRequest, Source, SourceCreate, SourceUpdate
 from rag_bot import RAGChatBot
+from crud import CRUDSource
 
 data_sources = [
     ('service', 'https://t1.ru/'),
@@ -18,19 +19,27 @@ router = APIRouter(
 
 @router.get('/sources')
 def get_list_sources(db: Session = Depends(get_session)):
-    pass
+    sources = CRUDSource.get_sources(db)
+    return sources
 
 @router.post('/sources')
-def add_source():
-    pass
+def add_source(source: SourceCreate, db: Session = Depends(get_session)):
+    new_source = CRUDSource.create_source(db, source)
+    return new_source
 
 @router.put('/sources/{id_source}')
-def change_source(id_source: int):
-    pass
+def change_source(id_source: int, source_update: SourceUpdate, db: Session = Depends(get_session)):
+    updated_source = CRUDSource.update_source(db, id_source, source_update)
+    if not updated_source:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found!")
+    return updated_source
 
 @router.delete('/sources/{id_source}')
-def delete_source(id_source: int):
-    pass
+def delete_source(id_source: int, db: Session = Depends(get_session)):
+    deleted_source = CRUDSource.delete_source(db, id_source)
+    if not deleted_source:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source not found")
+    return deleted_source
 
 @router.get('/assistants')
 def get_assistants():
