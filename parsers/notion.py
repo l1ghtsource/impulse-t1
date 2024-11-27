@@ -1,13 +1,13 @@
-
 import time
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service 
-from selenium.webdriver.common.by import By 
-from selenium.webdriver.support.ui import WebDriverWait 
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import fake_useragent
 import os
+
 
 def fetch_and_save_notion_content(url, file_path='./parsers/results/notion_content.txt'):
     user_agent = fake_useragent.UserAgent()
@@ -54,6 +54,7 @@ def fetch_and_save_notion_content(url, file_path='./parsers/results/notion_conte
         browser.quit()
 
     return os.path.abspath(file_path)
+
 
 # Пример использования функции
 url = 'https://quickest-custard-3d3.notion.site/Dmitry-Konoplyannikov-7892b63ba7cb4000b45484147a783bf0'
