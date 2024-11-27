@@ -286,6 +286,7 @@ class RAGChatBot:
 #         ('file', '/content/sample_submission.csv'),
 #         ('file', '/content/https___python.langchain.com_v0.1_docs_modules_data_connection_document_loaders_html_.htm'),
 #         ('file', '/content/README.md'),
+#         ('file', '/content/10kb.json')
 #     ],
 #     from_huggingface=False,
 #     gigachat_api_key='NjBiZDkyMTItOTVlYi00ZGE4LTlmM2YtNGExZWVhZTQ3MDQxOjhiMTAxN2Y2LWRiM2QtNDhiMS1hZTNkLTc3MjA2MDAzNDA1OA==',
