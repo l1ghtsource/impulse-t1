@@ -1,15 +1,16 @@
-import MainPage from '../pages/MainPage/MainPage';
-import '../shared/styles/App.scss';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import router from './routes';
+import store from './redux'; 
+import { ConfigProvider } from 'antd';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <Routes>
-        <Route path="*" element={<Navigate to="/" replace />} />
-        <Route path="/" element={<MainPage/>} />
-      </Routes>
-    </div>
+    <ConfigProvider>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </ConfigProvider>
   );
 }
 

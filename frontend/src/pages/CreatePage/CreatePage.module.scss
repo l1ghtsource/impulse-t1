@@ -1,0 +1,42 @@
+.page {
+	padding: 30px 80px;
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+.title {
+	color: #00aae6;
+	font-family: "ALS Hauss";
+	font-size: 36px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
+.stepss {
+	padding: 0 120px;
+}
+.subTitle {
+	color: #00aae6;
+	font-family: "ALS Hauss";
+	font-size: 24px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: normal;
+}
+
+.fileGrid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+}
+
+.btn {
+	width: fit-content;
+	margin: 0 auto;
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 24px;
+	padding: 15px 15px;
+	height: 40px;
+}

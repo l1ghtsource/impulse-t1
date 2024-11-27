@@ -1,0 +1,96 @@
+.card {
+	width: 170px;
+	height: 60px;
+	border: 3px solid #fff;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #fff;
+	cursor: pointer;
+	transition: 0.3s;
+	position: relative;
+	padding: 15px;
+	box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+	position: relative;
+
+	&:hover {
+		border: 3px solid #1890ff;
+	}
+}
+
+.card.active {
+	border: 3px solid #1890ff;
+}
+
+.label {
+	cursor: pointer;
+	cursor: pointer;
+	z-index: 1;
+	display: block; // Убедитесь, что label ведет себя как блочный элемент
+	width: 100%; // Ограничиваем ширину текста
+	text-align: center; // Центрируем текст
+	white-space: nowrap; // Запрещаем перенос текста на новую строку
+	overflow: hidden; // Обрезаем содержимое за пределами блока
+	text-overflow: "..";
+	z-index: 1;
+}
+
+.input {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	cursor: pointer;
+}
+.dot {
+	position: absolute;
+	top: -12px;
+	right: -11px;
+	background-color: #1890ff;
+	border-radius: 60px;
+	color: white;
+	padding: 4px 7px;
+	transition: 0.3s;
+	z-index: 10;
+}
+.popup {
+	display: flex;
+	flex-direction: column;
+	border-radius: 10px;
+	border: 4px solid #1890ff;
+	z-index: 9;
+	background-color: white;
+}
+.popupItem {
+	padding: 12px;
+	border-top: 4px solid #1890ff;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 170px;
+	cursor: auto;
+	gap: 14px;
+	& div {
+		max-width: 100px;
+		overflow: hidden;
+		white-space: nowrap; // Запрещаем перенос текста на новую строку // Обрезаем содержимое за пределами блока
+		text-overflow: ellipsis;
+	}
+}
+.trash {
+	width: 12px;
+	height: 12px;
+	background-color: red;
+	cursor: pointer;
+}
+.spin {
+	transform: translateX(14px);
+}
+.modal {
+	& > div {
+		& > div {
+			padding: 50px 40px 20px 20px !important;
+		}
+	}
+}
