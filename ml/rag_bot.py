@@ -126,7 +126,7 @@ class RAGChatBot:
 
     def _load_data(self, sources: List[tuple]):
         loaders = []
-        whisper_model = WhisperModel()  # Инициализируем модель транскрипции
+        whisper_model = WhisperModel()
 
         for mode, source in sources:
             if mode == 'file':

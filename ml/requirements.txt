@@ -26,4 +26,6 @@ sentence-transformers==3.2.1
 transformers==4.46.2
 unstructured==0.16.8
 jq==1.8.0
-torchaudio
+torch==2.5.1+cu121
+torchaudio==2.5.1+cu121
+onnxruntime==1.20.1
