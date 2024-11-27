@@ -25,6 +25,18 @@ class Assistant(Base):
     llm: Mapped['LLM'] = relationship(back_populates='assistants')
     retriever: Mapped['RetrieverModel'] = relationship(back_populates='assistants')
 
+class Source(Base):
+    __tablename__='sources'
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, unique=True)
+    
+    name: Mapped[str]
+    type: Mapped[str]
+    url_or_path: Mapped[str]
+    
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+
 class Index(Base):
     __tablename__='indexes'
 
