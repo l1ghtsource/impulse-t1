@@ -12,6 +12,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.llms import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
 from typing import List, Union, Dict, Any, Optional
+from whisper_model import WhisperModel
 import os
 
 
@@ -125,6 +126,8 @@ class RAGChatBot:
 
     def _load_data(self, sources: List[tuple]):
         loaders = []
+        whisper_model = WhisperModel()  # Инициализируем модель транскрипции
+
         for mode, source in sources:
             if mode == 'file':
                 if source.lower().endswith('.txt'):
@@ -147,6 +150,16 @@ class RAGChatBot:
                     ))
                 elif source.lower().endswith(('.xls', '.xlsx')):
                     loaders.append(UnstructuredExcelLoader(source))
+                elif source.lower().endswith('.mp3'):
+                    transcription = whisper_model.process_sample(source)
+                    temp_txt_path = '/tmp/transcription.txt'
+                    try:
+                        with open(temp_txt_path, 'w', encoding='utf-8') as f:
+                            f.write(transcription)
+                        loaders.append(TextLoader(temp_txt_path, autodetect_encoding=True))
+                    finally:
+                        if os.path.exists(temp_txt_path):
+                            os.remove(temp_txt_path)
                 else:
                     raise ValueError(f'Unsupported file format: {source}')
             elif mode == 'url':
@@ -186,7 +199,7 @@ class RAGChatBot:
             tokenizer = AutoTokenizer.from_pretrained(model_name)
             model = AutoModelForCausalLM.from_pretrained(model_name)
             pipe = pipeline(
-                'text-generation', model=model, tokenizer=tokenizer, max_new_tokens=1024
+                'text-generation', model=model, tokenizer=tokenizer, max_new_tokens=512
             )
             llm = HuggingFacePipeline(pipeline=pipe)
         else:
