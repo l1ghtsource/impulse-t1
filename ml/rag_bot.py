@@ -1,7 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from langchain.document_loaders import PyPDFLoader, TextLoader, WebBaseLoader, BSHTMLLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
-from langchain_community.document_loaders import UnstructuredMarkdownLoader, JSONLoader, UnstructuredXMLLoader
+from langchain_community.document_loaders import UnstructuredMarkdownLoader, JSONLoader, UnstructuredXMLLoader, UnstructuredExcelLoader, ConfluenceLoader
 from langchain_community.document_loaders.merge import MergedDataLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.chat_models.gigachat import GigaChat
@@ -145,6 +145,8 @@ class RAGChatBot:
                         jq_schema='.',
                         text_content=False
                     ))
+                elif source.lower().endswith(('.xls', '.xlsx')):
+                    loaders.append(UnstructuredExcelLoader(source))
                 else:
                     raise ValueError(f'Unsupported file format: {source}')
             elif mode == 'url':
@@ -152,6 +154,17 @@ class RAGChatBot:
                     loaders.append(WebBaseLoader(source))
                 else:
                     raise ValueError(f'Unsupported URL format: {source}')
+            elif mode == 'confluence':
+                url, username, api_key, space_key, limit = source['url'], source[
+                    'username'], source['api_key'], source['space_key'], source['limit']
+                loader = ConfluenceLoader(
+                    url=url,
+                    username=username,
+                    api_key=api_key,
+                    space_key=space_key,
+                    limit=limit,
+                )
+                loaders.append(loader)
             else:
                 raise ValueError(f'Unsupported mode: {mode}')
 
@@ -289,7 +302,9 @@ class RAGChatBot:
 #         ('file', '/content/https___python.langchain.com_v0.1_docs_modules_data_connection_document_loaders_html_.htm'),
 #         ('file', '/content/README.md'),
 #         ('file', '/content/10kb.json'),
-#         ('file', '/content/1.xml')
+#         ('file', '/content/1.xml'),
+#         ('file', '/content/file_example_XLSX_1000.xlsx'),
+#         ('confluence', {'url': 'https://yoursite.atlassian.com/wiki', 'username': 'me', 'api_key': '12345', 'space_key': 'SPACE', 'limit': 50}),
 #     ],
 #     from_huggingface=False,
 #     gigachat_api_key='NjBiZDkyMTItOTVlYi00ZGE4LTlmM2YtNGExZWVhZTQ3MDQxOjhiMTAxN2Y2LWRiM2QtNDhiMS1hZTNkLTc3MjA2MDAzNDA1OA==',
