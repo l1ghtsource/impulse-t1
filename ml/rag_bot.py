@@ -269,7 +269,8 @@ class RAGChatBot:
 #         ('file', '/content/2408.17352v1.pdf'),
 #         ('file', '/content/Bulgakov_Mihail_Master_i_Margarita_Readli.Net_bid256_5c1f5.txt'),
 #         ('file', '/content/sample_submission.csv'),
-#         ('file', '/content/https___python.langchain.com_v0.1_docs_modules_data_connection_document_loaders_html_.htm')
+#         ('file', '/content/https___python.langchain.com_v0.1_docs_modules_data_connection_document_loaders_html_.htm'),
+#         ('file', '/content/README.md'),
 #     ],
 #     from_huggingface=False,
 #     gigachat_api_key='NjBiZDkyMTItOTVlYi00ZGE4LTlmM2YtNGExZWVhZTQ3MDQxOjhiMTAxN2Y2LWRiM2QtNDhiMS1hZTNkLTc3MjA2MDAzNDA1OA==',
