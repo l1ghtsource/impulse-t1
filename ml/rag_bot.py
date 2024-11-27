@@ -140,7 +140,7 @@ class RAGChatBot:
                 elif source.lower().endswith('.json'):
                     loaders.append(JSONLoader(
                         source,
-                        jq_schema='.,
+                        jq_schema='.',
                         text_content=False
                     ))
                 else:
