@@ -22,7 +22,7 @@ class WhisperModel:
 
         self.model = model
         self.processor = processor
-        self.forced_decoder_ids_eng = processor.get_decoder_prompt_ids(language='english', task='transcribe')
+        self.forced_decoder_ids_ru = processor.get_decoder_prompt_ids(language='russian', task='transcribe')
         self.resampler = {}
         self.vad, self.vad_utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
                                                   model='silero_vad',
@@ -75,12 +75,12 @@ class WhisperModel:
                     clip[ts['start']:ts['end'] + 1], sampling_rate=16000, return_tensors='pt'
                 ).input_features.to(self.dtype).to(self.device)
 
-                predicted_ids_eng = self.model.generate(input_features,
-                                                        forced_decoder_ids=self.forced_decoder_ids_eng,
-                                                        do_sample=True,
-                                                        temperature=0.3)
-                transcription_eng = self.processor.batch_decode(predicted_ids_eng, skip_special_tokens=True)
+                predicted_ids_ru = self.model.generate(input_features,
+                                                       forced_decoder_ids=self.forced_decoder_ids_ru,
+                                                       do_sample=True,
+                                                       temperature=0.3)
+                transcription_ru = self.processor.batch_decode(predicted_ids_ru, skip_special_tokens=True)
 
-                full.append(transcription_eng[0])
+                full.append(transcription_ru[0])
 
         return ' '.join(full)

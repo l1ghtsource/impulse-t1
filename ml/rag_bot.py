@@ -153,13 +153,9 @@ class RAGChatBot:
                 elif source.lower().endswith('.mp3'):
                     transcription = whisper_model.process_sample(source)
                     temp_txt_path = '/tmp/transcription.txt'
-                    try:
-                        with open(temp_txt_path, 'w', encoding='utf-8') as f:
-                            f.write(transcription)
-                        loaders.append(TextLoader(temp_txt_path, autodetect_encoding=True))
-                    finally:
-                        if os.path.exists(temp_txt_path):
-                            os.remove(temp_txt_path)
+                    with open(temp_txt_path, 'w', encoding='utf-8') as f:
+                        f.write(transcription)
+                    loaders.append(TextLoader(temp_txt_path, autodetect_encoding=True))
                 else:
                     raise ValueError(f'Unsupported file format: {source}')
             elif mode == 'url':
@@ -310,15 +306,16 @@ class RAGChatBot:
 #     save_path='vector_store_1',
 #     system_prompt=roles['ресерчер'],
 #     data_sources=[
-#         ('file', '/content/2408.17352v1.pdf'),
-#         ('file', '/content/Bulgakov_Mihail_Master_i_Margarita_Readli.Net_bid256_5c1f5.txt'),
+#         ('file', '/content/2408.17352v1.pdf'), # PDF
+#         ('file', '/content/Bulgakov_Mihail_Master_i_Margarita_Readli.Net_bid256_5c1f5.txt'), # TXT
 #         ('file', '/content/sample_submission.csv'),
-#         ('file', '/content/https___python.langchain.com_v0.1_docs_modules_data_connection_document_loaders_html_.htm'),
-#         ('file', '/content/README.md'),
-#         ('file', '/content/10kb.json'),
-#         ('file', '/content/1.xml'),
-#         ('file', '/content/file_example_XLSX_1000.xlsx'),
-#         ('confluence', {'url': 'https://yoursite.atlassian.com/wiki', 'username': 'me', 'api_key': '12345', 'space_key': 'SPACE', 'limit': 50}),
+#         ('file', '/content/https___python.langchain.com_v0.1_docs_modules_data_connection_document_loaders_html_.htm'), # HTML
+#         ('file', '/content/README.md'), # MARKDOWN
+#         ('file', '/content/10kb.json'), # JSON
+#         ('file', '/content/1.xml'), # XML
+#         ('file', '/content/file_example_XLSX_1000.xlsx'), # EXCEL
+#         ('file', '/content/pohmele.mp3'), # AUDIO
+#         ('confluence', {'url': 'https://yoursite.atlassian.com/wiki', 'username': 'me', 'api_key': '12345', 'space_key': 'SPACE', 'limit': 50}), # CONFLUENCE
 #     ],
 #     from_huggingface=False,
 #     gigachat_api_key='NjBiZDkyMTItOTVlYi00ZGE4LTlmM2YtNGExZWVhZTQ3MDQxOjhiMTAxN2Y2LWRiM2QtNDhiMS1hZTNkLTc3MjA2MDAzNDA1OA==',
