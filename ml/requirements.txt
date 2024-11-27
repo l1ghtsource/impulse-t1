@@ -25,3 +25,4 @@ typing-inspect==0.9.0
 sentence-transformers==3.2.1
 transformers==4.46.2
 unstructured==0.16.8
+jq==1.8.0

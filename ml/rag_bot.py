@@ -1,7 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from langchain.document_loaders import PyPDFLoader, TextLoader, WebBaseLoader, BSHTMLLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
-from langchain_community.document_loaders import UnstructuredMarkdownLoader
+from langchain_community.document_loaders import UnstructuredMarkdownLoader, JSONLoader
 from langchain_community.document_loaders.merge import MergedDataLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.chat_models.gigachat import GigaChat
@@ -42,7 +42,7 @@ class RAGChatBot:
         chunk_overlap: int = 200,
         k_retriever: int = 5,
         save_path: str = 'vector_store.index',
-        system_prompt:  Optional[str] = 'Ты ученый, отвечай по-научному'
+        system_prompt:  Optional[str] = None
     ):
         self.data_sources = data_sources
         self.embeddings_model = embeddings_model
@@ -52,26 +52,27 @@ class RAGChatBot:
         self.save_path = save_path
         self.system_prompt = system_prompt
 
-        self.custom_prompt_template = f'''
-        SYSTEM PROMPT: 
-        {self.system_prompt}
+        if self.system_prompt:
+            self.custom_prompt_template = f'''
+            SYSTEM PROMPT: 
+            {self.system_prompt}
 
-        CONTEXT: 
-        {{context}}
+            CONTEXT: 
+            {{context}}
 
-        QUESTION: 
-        {{question}}
+            QUESTION: 
+            {{question}}
 
-        CHAT HISTORY:
-        {{chat_history}}
+            CHAT HISTORY:
+            {{chat_history}}
 
-        ANSWER:
-        '''
+            ANSWER:
+            '''
 
-        self.custom_prompt = PromptTemplate(
-            template=self.custom_prompt_template,
-            input_variables=['context', 'question', 'chat_history'],
-        )
+            self.custom_prompt = PromptTemplate(
+                template=self.custom_prompt_template,
+                input_variables=['context', 'question', 'chat_history'],
+            )
 
         self.llm = self._get_model(
             model_name=model_name,
@@ -101,13 +102,18 @@ class RAGChatBot:
             output_key='answer'
         )
 
+        kwargs = {}
+
+        if self.system_prompt:
+            kwargs['combine_docs_chain_kwargs'] = {'prompt': self.custom_prompt}
+
         self.conversation_chain = ConversationalRetrievalChain.from_llm(
             llm=self.llm,
             retriever=retriever,
             memory=self.chat_memory,
             return_source_documents=True,
             chain_type='stuff',
-            combine_docs_chain_kwargs={'prompt': self.custom_prompt}
+            **kwargs
         )
 
     def chat(self, query: str):
@@ -131,6 +137,12 @@ class RAGChatBot:
                     loaders.append(BSHTMLLoader(source))
                 elif source.lower().endswith('.md'):
                     loaders.append(UnstructuredMarkdownLoader(source))
+                elif source.lower().endswith('.json'):
+                    loaders.append(JSONLoader(
+                        source,
+                        jq_schema='.,
+                        text_content=False
+                    ))
                 else:
                     raise ValueError(f'Unsupported file format: {source}')
             elif mode == 'url':
