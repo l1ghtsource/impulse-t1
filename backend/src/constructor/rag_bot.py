@@ -206,9 +206,11 @@ class RAGChatBot:
                     try:
                         loaders.append(WebBaseLoader(source))
                     except Exception as e:
-                        raise RuntimeError(f"Error loading URL '{source}': {e}")
+                        #raise RuntimeError(f"Error loading URL '{source}': {e}")
+                        pass
                 else:
-                    raise ValueError(f'Unsupported URL format: {source}')
+                    #raise ValueError(f'Unsupported URL format: {source}')
+                    pass
             elif mode == 'notion':
                 try:
                     path = fetch_and_save_notion_content(source)
@@ -233,7 +235,8 @@ class RAGChatBot:
                         )
                     )
                 except Exception as e:
-                    raise RuntimeError(f"Error loading GitHub repository '{source}': {e}")
+                    pass
+                    #raise RuntimeError(f"Error loading GitHub repository '{source}': {e}")
             elif mode == 'youtube':
                 try:
                     loaders.append(YoutubeLoader(source, language='ru'))
