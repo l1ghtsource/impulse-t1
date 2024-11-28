@@ -1,0 +1,35 @@
+.page {
+	padding: 30px;
+}
+.cont {
+	max-width: 1280px;
+	margin: 0 auto;
+	display: flex;
+	gap: 200px;
+	justify-content: center;
+}
+.log {
+	background-image: url("../../shared/imgs/Group.svg");
+	width: 368px;
+	background-size: contain;
+	height: 500px;
+}
+.col {
+	width: 400px;
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+.item {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+.subsubTitle {
+	color: #00aae6;
+
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+}

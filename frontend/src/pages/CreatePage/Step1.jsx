@@ -60,7 +60,7 @@ const Step1 = ({setStep}) => {
 					<ActionButton key={index} input={el} index={index} handler={handlePrompt} type='prompt' data={prompt.name} hover={roles[el]} />
 				))}
 			</div>
-			<TextArea />
+			<TextArea disabled={prompt.name} />
 			<Button type='primary' onClick={() => setStep(prevStep => prevStep + 1)} className={styles.btn}>
 				К следующему шагу
 			</Button>

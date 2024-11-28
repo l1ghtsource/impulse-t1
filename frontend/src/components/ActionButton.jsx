@@ -71,8 +71,18 @@ const ActionButton = ({index, input, handler, type, data, hover = false}) => {
 					{input}
 				</div>
 				<Modal open={isModalOpen} onOk={e => handleOk(e)} rootClassName={styles.modal} className={styles.modal} onCancel={e => handleCancel(e)} onClose={handleCancel}>
-					<Input placeholder={`Введите url ${input}`} value={value} onChange={e => setValue(e.target.value)}></Input>
+					<Input
+						placeholder={
+							input === "youtube" ? "Укажите id видео на YouTube"
+							: input === "github" ?
+								"Укажите login/repo на GitHub"
+							:	`Введите url ${input}`
+						}
+						value={value}
+						onChange={e => setValue(e.target.value)}
+					/>
 				</Modal>
+
 				{data?.length ?
 					<>
 						<div
