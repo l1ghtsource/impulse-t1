@@ -53,7 +53,7 @@ class RAGChatBot:
         chunk_size: int = 2000,
         chunk_overlap: int = 200,
         k_retriever: int = 5,
-        save_path: str = 'vector_store2.index',
+        save_path: str = 'vector_store3.index',
         system_prompt:  Optional[str] = None
     ):
         self.data_sources = data_sources
