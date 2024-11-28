@@ -1,7 +1,7 @@
 import React from "react";
+import {NavLink} from "react-router-dom";
 
 import styles from "./Layout.module.scss";
-import {Link} from "react-router-dom";
 
 const Header = () => {
 	return (
@@ -12,8 +12,12 @@ const Header = () => {
 					<div className={styles.logotext}>FoRAGer</div>
 				</div>
 				<div className={styles.links}>
-					<Link to='/'>Мои ассистенты</Link>
-					<Link to='/create'>Новый ассистент</Link>
+					<NavLink to='/' className={({isActive}) => (isActive ? `${styles.activeLink}` : undefined)}>
+						Мои ассистенты
+					</NavLink>
+					<NavLink to='/create' className={({isActive}) => (isActive ? `${styles.activeLink}` : undefined)}>
+						Новый ассистент
+					</NavLink>
 				</div>
 			</div>
 			<div className={styles.right}>
@@ -23,4 +27,5 @@ const Header = () => {
 		</header>
 	);
 };
+
 export default React.memo(Header);
