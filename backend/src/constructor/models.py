@@ -24,27 +24,36 @@ class Assistant(Base):
     #Relationships
     llm: Mapped['LLM'] = relationship(back_populates='assistants')
     retriever: Mapped['RetrieverModel'] = relationship(back_populates='assistants')
+    sources: Mapped[List['Source']] = relationship(back_populates='assistant')
+    sources: Mapped[List['Index']] = relationship(back_populates='assistant')
 
 class Source(Base):
     __tablename__='sources'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, unique=True)
-    
+    id_assistant: Mapped[Optional[int]] = mapped_column(ForeignKey('assistants.id'))
+
     name: Mapped[str]
     type: Mapped[str]
     url_or_path: Mapped[str]
+    s3_url: Mapped[str]
     
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+
+    assistant: Mapped[Optional['Assistant']] = relationship(back_populates='sources') 
 
 class Index(Base):
     __tablename__='indexes'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, unique=True)
+    id_assistant: Mapped[Optional[int]] = mapped_column(ForeignKey('assistants.id'))
 
     path_to_index: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+
+    assistant: Mapped[Optional['Assistant']] = relationship(back_populates='indexes')
 
 class LLM(Base):
     __tablename__='llm'

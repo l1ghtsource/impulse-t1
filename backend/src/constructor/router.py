@@ -114,7 +114,7 @@ def chat(request: ChatRequest):
 @router.post("/addServicesAndPrompt")
 async def upload_file(request_data: RequestData):
     sources_to_load = []
-    for service_type, urls in request_data.services.dict().items():
+    for service_type, urls in request_data.services.model_dump().items():
         if urls:
             for url in urls:
                 sources_to_load.append(('url', url))

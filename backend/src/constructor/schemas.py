@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 class AssistantBase(BaseModel):
     name: str = Field(title='Название ассистента')
     id_llm: int = Field(title='id llm-модели')
-    id_retriever: str = Field(title='id ретривера')
+    id_retriever: int = Field(title='id ретривера')
 
     input_type: str = Field(title='Тип входа')
     prompt: str = Field(title='Промпт модели')
@@ -20,7 +20,7 @@ class AssistantCreate(AssistantBase):
 class AssistantUpdate(BaseModel):
     name: str | None = Field(default=None, title='Название ассистента')
     id_llm: int | None = Field(default=None, title='id llm-модели')
-    id_retriever: str | None = Field(default=None, title='id ретривера')
+    id_retriever: int | None = Field(default=None, title='id ретривера')
 
     input_type: str | None = Field(default=None, title='Тип входа')
     prompt: str | None = Field(default=None, title='Промпт модели')
@@ -28,6 +28,8 @@ class AssistantUpdate(BaseModel):
 
 class Assistant(AssistantBase):
     id: int
+    sources: List['Source'] = []
+    indexes: List['Index'] = []
 
     class Config:
         from_attributes = True
@@ -73,6 +75,7 @@ class SourceBase(BaseModel):
     name: str = Field(title='Название источника')
     type: str = Field(title='Тип источника')
     url_or_path: str = Field(title='Ссылка или путь до источника')
+    s3_url: str = Field(title='URL в S3')
 
 class SourceCreate(SourceBase):
     pass
@@ -81,6 +84,7 @@ class SourceUpdate(BaseModel):
     name: str | None = Field(default=None, title='Название источника')
     type: str | None = Field(default=None, title='Тип источника')
     url_or_path: str | None = Field(default=None, title='Ссылка или путь до источника')
+    s3_url: str | None = Field(default=None, title='URL в S3')
 
 class Source(SourceBase):
     id: int = Field(title='id источника')
