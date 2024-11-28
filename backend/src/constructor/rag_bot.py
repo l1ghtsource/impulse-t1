@@ -217,16 +217,7 @@ class RAGChatBot:
                     raise RuntimeError(f"Error loading Notion Page '{source}': {e}")
             elif mode == 'confluence':
                 try:
-                    url, username, api_key, space_key, limit = source['url'], source[
-                        'username'], source['api_key'], source['space_key'], source['limit']
-                    loader = ConfluenceLoader(
-                        url=url,
-                        username=username,
-                        api_key=api_key,
-                        space_key=space_key,
-                        limit=limit,
-                    )
-                    loaders.append(loader)
+                    loaders.append(ConfluenceLoader(url=source))
                 except Exception as e:
                     raise RuntimeError(f"Error loading Confluence data: {e}")
             elif mode == 'github':
@@ -408,7 +399,7 @@ class RAGChatBot:
 #         ('file', '/content/file_example_XLSX_1000.xlsx'), # EXCEL
 #         ('file', '/content/pohmele.mp3'), # AUDIO
 #         ('github', 'l1ghtsource/media-searcher') # GITHUB REPO
-#         ('confluence', {'url': 'https://yoursite.atlassian.com/wiki', 'username': 'me', 'api_key': '12345', 'space_key': 'SPACE', 'limit': 50}), # CONFLUENCE
+#         ('confluence', 'https://yoursite.atlassian.com/wiki'), # CONFLUENCE
 #         ('notion', 'https://quickest-custard-3d3.notion.site/Dmitry-Konoplyannikov-7892b63ba7cb4000b45484147a783bf0'), # NOTION
 #         ('youtube', 'OMSm9pZdNzE'), # YOUTUBE VIDEO
 #         ('image', '/content/opz74tkuiuj7gj2ute0yeg0d-sy.jpeg'), # ANY IMAGE
