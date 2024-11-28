@@ -21,12 +21,8 @@ const TabSite = () => {
 	const dispatch = useDispatch();
 
 	// Функция обработки загрузки изображения
-	const handleUpload = file => {
-		const reader = new FileReader();
-		reader.onload = () => {
-			setLogo(reader.result);
-		};
-		reader.readAsDataURL(file);
+	const handleUpload = e => {
+		setLogo(e.target.value);
 	};
 	const handleSubmitClick = () => {
 		const req = {
@@ -88,14 +84,7 @@ const TabSite = () => {
 				<div className={styles.rigt}>
 					<div className={styles.elem}>
 						<div className={styles.subsubTitle}>Логотип</div>
-						<Upload
-							beforeUpload={file => {
-								handleUpload(file);
-								return false;
-							}}
-							showUploadList={false}>
-							<Button>Загрузить</Button>
-						</Upload>
+						<Input onChange={e => handleUpload(e)} placeholder='Напишите URL картинки' />
 					</div>
 					<div className={styles.elem}>
 						<div className={styles.subsubTitle}>Шрифт</div>

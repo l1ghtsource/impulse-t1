@@ -16,7 +16,7 @@ export const fetchData = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        "https://impulse.itatmisis.ru/api/config/addServicesAndPrompt",
+        "http://51.250.42.179/api/config/addServicesAndPrompt",
         {
           method: "POST",
           headers: {
@@ -42,7 +42,7 @@ export const fetchChatResponse = createAsyncThunk(
   "botSlice/fetchChatResponse",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await fetch("https://impulse.itatmisis.ru/api/config/chat", {
+      const response = await fetch("http://51.250.42.179/api/config/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

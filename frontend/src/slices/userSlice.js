@@ -7,7 +7,7 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue, dispatch }) => {
     try {
       await axios.post(
-        "https://impulse.itatmisis.ru/api/config/login",
+        "http://51.250.42.179/api/config/login",
         credentials
       );
       // Если сервер не возвращает данные пользователя, берем их из credentials
@@ -25,7 +25,7 @@ export const registerUser = createAsyncThunk(
   async (data, { rejectWithValue, dispatch }) => {
     try {
       await axios.post(
-        "https://impulse.itatmisis.ru/api/config/register",
+        "http://51.250.42.179/api/config/register",
         data
       );
       // Если сервер не возвращает данные пользователя, берем их из data
