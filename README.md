@@ -10,11 +10,11 @@ Team Members:
 4. **Ильдар Ишбулатов** - Frontend
 5. **Кирилл Рыжичкин** - ML Engineer
 
-Презентация: [тык]()
+Презентация: [тык](https://drive.google.com/file/d/1Yzh4Qd_NESOhQyuyPVrfYPStead8e6uM/view?usp=sharing)
 
 Веб-сервис: [тык](https://impulse.itatmisis.ru/)
 
-API - [тык](https://impulse.itatmisis.ru/api/docs)
+Swagger API: [тык](https://impulse.itatmisis.ru/api/docs)
 
 ## Кейс "Окно знаний – цифровой ассистент базы знаний"
 
@@ -61,20 +61,35 @@ API - [тык](https://impulse.itatmisis.ru/api/docs)
 - youtube
 - any url
 
-## Сборка
+## Инструкция по запуску решения
 
-ТУТ НАПИСАТЬ ПРО СБОРКУ
+### 1. Клонирование репозитория
+Склонируйте репозиторий с помощью команды:
+```bash
+git clone https://github.com/Kin1599/impulse.git
+cd impulse
+```
 
-##### Локалькая сборка:
+### 2. Создание и активация виртуального окружения
+Создайте виртуальное окружение, чтобы изолировать зависимости проекта:
 
-1. Установить postgresql, docker
-2. Открыть docker desktop
-3. Заполнить все необходимые поля в .env, их нужно создавать по шаблону .env.sample и в том же месте, где находится этот файл
-4. В терминале написать docker-compose up --build -d
+- **Windows**:
+  ```bash
+  python -m venv venv
+  venv\Scripts\activate
+  ```
 
-##### Сборка на сервере:
+- **Linux/MacOS**:
+  ```bash
+  python3 -m venv venv
+  source venv/bin/activate
+  ```
 
-1. На сервер установить и настроить nodeJS, npx, nginx, docker, git
-2. С помощью git клонируем нашу репозиторию
-3. Заполнить все необходимые поля в .env, их нужно создавать по шаблону .env.sample и в том же месте, где находится этот файл
-4. И запускаем наш docker compose up --build -d
+### 3. Установка зависимостей
+Установите необходимые библиотеки, указанные в файле `requirements.txt`:
+```bash
+pip install -r requirements.txt
+```
+
+### 4. ДАЛЬШЕ ДОПИШИТЕ
+
