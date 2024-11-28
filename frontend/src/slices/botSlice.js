@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import baseUrl from "../../config";
+import baseUrl from "../config";
 
 // Проверяем localStorage и получаем данные или используем пустой массив
 const initialState = {

@@ -5,7 +5,7 @@ import {Button} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {addFile, uploadFiles} from "../../slices/createBotSlice";
 import ActionButton from "../../components/ActionButton";
-import baseUrl from "../../../config";
+import baseUrl from "../../config";
 
 const Step0 = ({setStep}) => {
 	const {services, data} = useSelector(s => s.createBot);
