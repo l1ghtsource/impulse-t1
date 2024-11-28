@@ -10,7 +10,7 @@ Team Members:
 4. **Ильдар Ишбулатов** - Frontend
 5. **Кирилл Рыжичкин** - ML Engineer
 
-Презентация: [тык](https://drive.google.com/file/d/1Yzh4Qd_NESOhQyuyPVrfYPStead8e6uM/view?usp=sharing)
+Презентация: [тык](https://disk.yandex.ru/i/HmzdRS5ghq--1A)
 
 Веб-сервис: [тык](http://51.250.42.179:3000)
 
@@ -70,26 +70,28 @@ git clone https://github.com/Kin1599/impulse.git
 cd impulse
 ```
 
-### 2. Создание и активация виртуального окружения
-Создайте виртуальное окружение, чтобы изолировать зависимости проекта:
+### 2. Проверить установлено ли нужные программы:
+Обязательно npm, node, postgresql (локально), docker
 
-- **Windows**:
-  ```bash
-  python -m venv venv
-  venv\Scripts\activate
-  ```
-
-- **Linux/MacOS**:
-  ```bash
-  python3 -m venv venv
-  source venv/bin/activate
-  ```
-
-### 3. Установка зависимостей
-Установите необходимые библиотеки, указанные в файле `requirements.txt`:
-```bash
-pip install -r requirements.txt
+Докер на linux устанавливается через эти команды:
+```
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
 ```
 
-### 4. ДАЛЬШЕ ДОПИШИТЕ
+### 3. Заполняем env-зависимости по шаблонам
+Берем нужные ключи
 
+### 4. Запускаем docker compose
+Открываем терминал и прописываем в корне проекта 
+```
+docker compose -f docker-compose-not-traefik.yml up --build -d
+```
+
+Если же у вас есть домен, то прописываем в .env корне проекта домен и запускаем уже в терминале команду: 
+```
+docker compose up --build -d
+```
+
+### 5. Переходим на сервер
+Если есть домен, то переходим по нему и радуемся, иначе переходим по локальному адресу + указываем порт `:3000` для фронтенда и `:8000/api/docs` для перехода в `Swagger`

@@ -53,7 +53,7 @@ class RAGChatBot:
         chunk_size: int = 2000,
         chunk_overlap: int = 200,
         k_retriever: int = 5,
-        save_path: str = 'vector_store.index',
+        save_path: str = 'vector_store3.index',
         system_prompt:  Optional[str] = None
     ):
         self.data_sources = data_sources
@@ -132,8 +132,22 @@ class RAGChatBot:
         if not self.conversation_chain:
             raise ValueError('Initialize chatbot with documents first')
         result = self.conversation_chain({'question': query})
+        answer_text = result['answer']
 
-        return result['answer'], result['source_documents']
+        answer_text = answer_text.replace('\n', ' ')
+
+        useful_answer_start = answer_text.find("Полезный ответ:")
+
+        if useful_answer_start != -1:
+            useful_answer = answer_text[useful_answer_start + len("Полезный ответ:"):].strip()
+        else:
+            useful_answer = answer_text
+
+        last_period_index = useful_answer.rfind('.')
+        if last_period_index != -1:
+            useful_answer = useful_answer[:last_period_index].strip()
+
+        return useful_answer, result['source_documents']
 
     def _load_data(self, sources: List[tuple]):
         loaders = []
@@ -206,9 +220,11 @@ class RAGChatBot:
                     try:
                         loaders.append(WebBaseLoader(source))
                     except Exception as e:
-                        raise RuntimeError(f"Error loading URL '{source}': {e}")
+                        #raise RuntimeError(f"Error loading URL '{source}': {e}")
+                        pass
                 else:
-                    raise ValueError(f'Unsupported URL format: {source}')
+                    #raise ValueError(f'Unsupported URL format: {source}')
+                    pass
             elif mode == 'notion':
                 try:
                     path = fetch_and_save_notion_content(source)
@@ -233,7 +249,8 @@ class RAGChatBot:
                         )
                     )
                 except Exception as e:
-                    raise RuntimeError(f"Error loading GitHub repository '{source}': {e}")
+                    pass
+                    #raise RuntimeError(f"Error loading GitHub repository '{source}': {e}")
             elif mode == 'youtube':
                 try:
                     loaders.append(YoutubeLoader(source, language='ru'))
