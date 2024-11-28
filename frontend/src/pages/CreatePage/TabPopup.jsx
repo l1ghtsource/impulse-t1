@@ -132,7 +132,7 @@ const TabPopup = () => {
 										<div
 											className={styles.miniIcon}
 											style={{
-												backgroundImage: newLogo ? `url(${logo})` : undefined,
+												backgroundImage: newLogo ? `url(${newLogo})` : undefined,
 												backgroundSize: "contain",
 												backgroundRepeat: "no-repeat",
 												backgroundPosition: "center",
