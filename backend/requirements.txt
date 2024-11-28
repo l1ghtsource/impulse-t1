@@ -98,3 +98,4 @@ beautifulsoup4==4.12.3
 faiss-cpu==1.9.0.post1
 ffmpy==0.4.0
 pydantic[email]
+atlassian-python-api==3.41.16
