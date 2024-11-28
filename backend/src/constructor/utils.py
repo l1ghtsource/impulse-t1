@@ -1,6 +1,6 @@
 import jwt
 from datetime import datetime, timedelta
-from config import ALGORITHM, SECRET_KEY_AUTH
+from ..config import ALGORITHM, SECRET_KEY_AUTH
 
 def create_access_token(data: dict):
     to_encode = data.copy()

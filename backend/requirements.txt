@@ -97,3 +97,4 @@ fake_useragent==1.5.1
 beautifulsoup4==4.12.3
 faiss-cpu==1.9.0.post1
 ffmpy==0.4.0
+pydantic[email]
