@@ -270,7 +270,7 @@ class RAGChatBot:
             llm = HuggingFacePipeline(pipeline=pipe)
         else:
             llm = GigaChat(
-                credentials=gigachat_api_key,
+                credentials="NGRhNTM4ZWYtZjJmMy00Y2JjLWE1MjItMTkwMjYxNDU4MjMyOjY5YWJiNTc4LWE0YTctNDE1OC1iYTgwLWZiMzAxYjQxZDc3Mg==",
                 verify_ssl_certs=False,
                 model='GigaChat-Pro'
             )
