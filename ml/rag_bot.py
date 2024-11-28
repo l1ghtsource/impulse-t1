@@ -361,6 +361,18 @@ class RAGChatBot:
         self._initialize_conversation_chain()
         print(f'System prompt successfully changed to: {new_system_prompt}')
 
+    def change_index(self, index_path: str):
+        if not os.path.exists(index_path):
+            raise FileNotFoundError(f"The specified index file '{index_path}' does not exist.")
+
+        try:
+            self.vector_store = FAISS.load_local(index_path, self.embeddings, allow_dangerous_deserialization=True)
+            self.save_path = index_path
+            self._initialize_conversation_chain()
+            print(f"Index successfully changed to '{index_path}' and reloaded.")
+        except Exception as e:
+            raise RuntimeError(f"Failed to load the new index from '{index_path}': {e}")
+
 
 # roles = {
 #     "аналитик": "Ты аналитик. Твоя задача — предоставить четкий, обоснованный и краткий анализ ситуации. Используй данные и логику для поддержки своих выводов. Избегай лишних деталей и философствования.",
