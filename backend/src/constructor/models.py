@@ -5,6 +5,19 @@ from sqlalchemy import JSON, DateTime, ForeignKey, func, create_engine
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List, Optional, Dict, Any
 
+class User(Base):
+    __tablename__ = 'users'
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, unique=True)
+    nickname: Mapped[str]
+    avatar: Mapped[str]
+    email: Mapped[str]
+    hashed_password: Mapped[str]
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+
+    assistants: Mapped[List['Assistant']] = relationship('Assistant', back_populates='user')
+
 class Assistant(Base):
     __tablename__='assistants'
 
@@ -14,6 +27,7 @@ class Assistant(Base):
     #ForeignKeys 
     id_llm: Mapped[int] = mapped_column(ForeignKey('llm.id')) 
     id_retriever: Mapped[int] = mapped_column(ForeignKey('retriever_models.id'))
+    id_user: Mapped[int] = mapped_column(ForeignKey('users.id'))
 
     input_type: Mapped[str]
     prompt: Mapped[str]
@@ -25,7 +39,8 @@ class Assistant(Base):
     llm: Mapped['LLM'] = relationship(back_populates='assistants')
     retriever: Mapped['RetrieverModel'] = relationship(back_populates='assistants')
     sources: Mapped[List['Source']] = relationship(back_populates='assistant')
-    sources: Mapped[List['Index']] = relationship(back_populates='assistant')
+    indexes: Mapped[List['Index']] = relationship(back_populates='assistant')
+    user: Mapped['User'] = relationship('User', back_populates='assistants')
 
 class Source(Base):
     __tablename__='sources'

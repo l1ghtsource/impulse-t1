@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from fastapi import UploadFile
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 
 class AssistantBase(BaseModel):
     name: str = Field(title='Название ассистента')
@@ -129,3 +129,21 @@ class RequestData(BaseModel):
     settings: Settings
     activeLlm: Optional[str]
     activeRetriver: Optional[str]
+
+class UserBase(BaseModel):
+    nickname: str
+    avatar: str
+    email: EmailStr
+    
+class UserCreate(UserBase):
+    hashed_password: str
+
+class User(UserBase):
+    id: int
+
+    class Config:
+        from_attributes = True # Включает поддержку преобразования данных из SQLAlchemy в Pydantic
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

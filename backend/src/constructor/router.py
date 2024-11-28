@@ -8,9 +8,12 @@ from fastapi import APIRouter, HTTPException, status, Depends, UploadFile, File
 from sqlalchemy.orm import Session
 from typing_extensions import Optional, Annotated
 
+from .utils import create_access_token
+from .service import authenticate_user, create_user
+
 from ..database import get_session
 from .schemas import AssistantCreate, AssistantUpdate, ChatRequest, Source, SourceCreate, SourceUpdate, RequestData, \
-    Item
+    Item, Token, UserCreate
 from .rag_bot import RAGChatBot
 from .crud import CRUDSource, CRUDAssistant
 
@@ -134,4 +137,24 @@ async def create_upload_files(files: list[UploadFile]):
     bot.add_sources(sources_to_load)
     return {"result": "files were loaded"}
 
+@router.post("/login", tags=["Auth"])
+def login_user(email: str, password: str, db: Session = Depends(get_session)):
 
+    user = authenticate_user(db, email, password)
+
+    if not user:
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+
+    access_token = create_access_token(data={"sub": user.email})
+    
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@router.post("/register", response_model=Token, tags=["Auth"])
+def register_user(user: UserCreate, db: Session = Depends(get_session)):
+    
+    new_user = create_user(db, user)
+
+    # Генерируем JWT токен для нового пользователя
+    access_token = create_access_token(data={"sub": new_user.email})
+
+    return {"access_token": access_token, "token_type": "bearer"}
