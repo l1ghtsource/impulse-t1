@@ -76,6 +76,7 @@
 	margin: 30px auto 0;
 	padding: 30px 180px 80px;
 	border: 2px solid #00aae6;
+	min-height: 400px;
 }
 .previewContainer {
 	display: flex;
@@ -94,4 +95,101 @@
 	width: 80px;
 	height: 80px;
 	background-color: gray;
+}
+.divdiv {
+	display: flex;
+	gap: 10px;
+}
+.elemLogos {
+	display: flex;
+	gap: 40px;
+}
+.preview {
+	position: relative;
+}
+.specialBtn {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+.botChat {
+	border: 5px solid #00aae6;
+	border-radius: 30px;
+	overflow: hidden;
+}
+.prewHeader {
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: #fff;
+	font-size: 36px;
+	line-height: 24px; /* 66.667% */
+	.previewLogo {
+		width: 70px;
+		height: 70px;
+		border-radius: 70px;
+	}
+}
+.chat {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+	padding: 20px 0;
+}
+.ourMsg {
+	display: flex;
+	gap: 10px;
+	align-items: flex-end;
+	.text {
+		border: 1px solid rgba(0, 0, 0, 0.45);
+	}
+	max-width: 70%;
+	align-self: flex-end;
+}
+.theirMsg {
+	width: 70%;
+	align-self: flex-start;
+	display: flex;
+	gap: 10px;
+	.miniIcon {
+		align-self: flex-end;
+	}
+	.text {
+		color: white;
+	}
+	.time {
+		text-align: left;
+	}
+}
+.text {
+	padding: 20px;
+	border-radius: 20px;
+	font-size: 24px;
+}
+.time {
+	text-align: right;
+	color: rgba(0, 0, 0, 0.25);
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 100%;
+	margin-top: 10px;
+}
+.miniIcon {
+	width: 50px;
+	height: 50px;
+	border-radius: 50px;
+	flex-shrink: 0;
+}
+.chatChat {
+	display: flex;
+	gap: 20px;
+	padding: 20px;
+	align-items: center;
+}
+.blackTitle {
+	font-size: 24px;
+	font-weight: 500;
+	margin-bottom: 10px;
 }

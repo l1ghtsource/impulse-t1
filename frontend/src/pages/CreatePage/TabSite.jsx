@@ -1,27 +1,49 @@
 import React, {useState} from "react";
 import styles from "./CreatePage.module.scss";
-import {Button, Input, Upload} from "antd";
+import {Button, ColorPicker, Input, Select, Upload} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import classNames from "classnames";
 
 const TabSite = () => {
 	const [title, setTitle] = useState("");
 	const [desc, setDesc] = useState("");
-	const [logo, setLogo] = useState(null); // URL для загруженного изображения
-	const [font, setFont] = useState("");
-	const [color, setColor] = useState("");
+	const [logo, setLogo] = useState(null);
+	const [font, setFont] = useState(""); // Название шрифта
+	const [color, setColor] = useState("#00aae6"); // Цвет
 
 	// Функция обработки загрузки изображения
-	const handleUpload = ({file}) => {
+	const handleUpload = file => {
 		const reader = new FileReader();
 		reader.onload = () => {
-			setLogo(reader.result); // Устанавливаем результат чтения как строку
+			setLogo(reader.result);
 		};
-		reader.readAsDataURL(file); // Читаем файл как Data URL
+		reader.readAsDataURL(file);
 	};
+
+	// Генерация стиля для динамического подключения шрифта
+	const generateFontStyle = () => {
+		if (!font) return null;
+		return <style>{`@import url('https://fonts.googleapis.com/css2?family=${font.replace(/\s/g, "+")}:wght@400;700&display=swap');`}</style>;
+	};
+
+	const options = [
+		{
+			value: "roboto",
+			label: "Roboto",
+		},
+		{
+			value: "inter",
+			label: "Inter",
+		},
+		{
+			value: "Montserrat",
+			label: "Montserrat",
+		},
+	];
 
 	return (
 		<div className={styles.tab}>
+			{generateFontStyle() /* Подключаем шрифт динамически */}
 			<div className={styles.topTab}>
 				<div className={styles.rigt}>
 					<div className={styles.elem}>
@@ -37,10 +59,9 @@ const TabSite = () => {
 					<div className={styles.elem}>
 						<div className={styles.subsubTitle}>Логотип</div>
 						<Upload
-							accept='.png,.jpg,.svg'
 							beforeUpload={file => {
 								handleUpload({file});
-								return false; // Отключаем авто-загрузку
+								return false;
 							}}
 							showUploadList={false}>
 							<Button>Загрузить</Button>
@@ -48,18 +69,20 @@ const TabSite = () => {
 					</div>
 					<div className={styles.elem}>
 						<div className={styles.subsubTitle}>Шрифт</div>
-						<Input value={font} onChange={e => setFont(e.target.value)} />
+						<Select options={options} value={font} onChange={e => setFont(e)} placeholder='Введите название шрифта, напр. Roboto' />
 					</div>
 					<div className={styles.elem}>
 						<div className={styles.subsubTitle}>Основной цвет</div>
-						<Input value={color} onChange={e => setColor(e.target.value)} />
+						<div className={styles.divdiv}>
+							<ColorPicker defaultValue={"#00aae6"} value={color} onChange={(v, css) => setColor(css)} />
+							<Input value={color} onChange={e => setColor(e.target.value)} placeholder='Введите цвет, напр. #ff5733 или red' />
+						</div>
 					</div>
 				</div>
 			</div>
 			<div className={styles.subTitle}>Предпросмотр</div>
 			<div className={styles.preview}>
 				<div className={styles.previewContainer}>
-					{/* Динамический фон для логотипа */}
 					<div
 						className={styles.previewLogo}
 						style={{
@@ -67,14 +90,30 @@ const TabSite = () => {
 							backgroundSize: "contain",
 							backgroundRepeat: "no-repeat",
 							backgroundPosition: "center",
-							backgroundColor: logo && "inherit",
 						}}></div>
-					<div className={styles.subTitle}>{title || "Lorem Ipsum"}</div>
-					<div>{desc || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}</div>
+					<div
+						className={styles.subTitle}
+						style={{
+							fontFamily: font || "inherit",
+							color: color || "black", // Применяем цвет текста
+						}}>
+						{title || "Lorem Ipsum"}
+					</div>
+					<div
+						style={{
+							fontFamily: font || "inherit", // Применяем цвет текста
+						}}>
+						{desc || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+					</div>
 					<div className={styles.previewEl}>
 						<div>Input</div>
 						<TextArea disabled />
-						<Button type='primary' className={styles.miniBtn}>
+						<Button
+							type='primary'
+							className={styles.miniBtn}
+							style={{
+								backgroundColor: color || "#1890ff", // Пример использования цвета для кнопки
+							}}>
 							Отправить
 						</Button>
 					</div>
