@@ -2,6 +2,7 @@ import {createBrowserRouter, Navigate} from "react-router-dom";
 import Layout from "../pages/Layout/Layout";
 import CreatePage from "../pages/CreatePage/CreatePage";
 import MainPage from "../pages/MainPage/MainPage";
+import AssPage from "../pages/AssPage/AssPage";
 
 const router = createBrowserRouter([
 	{
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
 			{
 				path: "/create",
 				element: <CreatePage />,
+			},
+			{
+				path: "/:id",
+				element: <AssPage />,
 			},
 			// {
 			// 	path: "*", // Обработка несуществующих маршрутов
