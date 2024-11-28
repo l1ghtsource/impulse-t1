@@ -17,15 +17,15 @@ const router = createBrowserRouter([
 				path: "/create",
 				element: <CreatePage />,
 			},
-			{
-				path: "/:id",
-				element: <AssPage />,
-			},
 			// {
 			// 	path: "*", // Обработка несуществующих маршрутов
 			// 	element: <Navigate to='home' replace />, // Перенаправление на главную
 			// },
 		],
+	},
+	{
+		path: "/:id",
+		element: <AssPage />,
 	},
 ]);
 
