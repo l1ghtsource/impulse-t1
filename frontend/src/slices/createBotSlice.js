@@ -121,9 +121,16 @@ const createBotSlice = createSlice({
       },
       changePropmt: (state,action) => {
         const {name,value} = action.payload;
-        state.prompt = {
+        if (state.prompt.value === value && state.prompt.name === name){
+          state.prompt = {
+            value:null,
+            name:null
+          }
+        } else {
+          state.prompt = {
             name,
             value
+          }
         }
       }
     },

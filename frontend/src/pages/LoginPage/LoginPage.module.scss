@@ -7,12 +7,18 @@
 	display: flex;
 	gap: 200px;
 	justify-content: center;
+	align-items: center;
 }
 .log {
 	background-image: url("../../shared/imgs/Group.svg");
 	width: 368px;
 	background-size: contain;
 	height: 500px;
+}
+.consa {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
 }
 .col {
 	width: 400px;
