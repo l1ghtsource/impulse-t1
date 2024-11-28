@@ -49,6 +49,10 @@
 .slider {
 	width: 40%;
 }
+.tab {
+	display: flex;
+	flex-direction: column;
+}
 .topTab {
 	display: flex;
 	gap: 60px;

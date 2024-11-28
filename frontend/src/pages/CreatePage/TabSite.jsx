@@ -3,6 +3,8 @@ import styles from "./CreatePage.module.scss";
 import {Button, ColorPicker, Input, Select, Upload} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import classNames from "classnames";
+import {useDispatch, useSelector} from "react-redux";
+import {addElement} from "../../slices/botSlice";
 
 const TabSite = () => {
 	const [title, setTitle] = useState("");
@@ -11,6 +13,10 @@ const TabSite = () => {
 	const [font, setFont] = useState(""); // Название шрифта
 	const [color, setColor] = useState("#00aae6"); // Цвет
 
+	const {data, services, settings, activeRetriver, activeLlm, prompt} = useSelector(s => s.createBot);
+
+	const dispatch = useDispatch();
+
 	// Функция обработки загрузки изображения
 	const handleUpload = file => {
 		const reader = new FileReader();
@@ -18,6 +24,24 @@ const TabSite = () => {
 			setLogo(reader.result);
 		};
 		reader.readAsDataURL(file);
+	};
+	const handleSubmitClick = () => {
+		const req = {
+			data,
+			services,
+			settings,
+			activeRetriver,
+			activeLlm,
+			prompt,
+		};
+		const res = {
+			title,
+			desc,
+			logo,
+			font,
+			color,
+		};
+		dispatch(addElement(res));
 	};
 
 	// Генерация стиля для динамического подключения шрифта
@@ -124,6 +148,9 @@ const TabSite = () => {
 					</div>
 				</div>
 			</div>
+			<Button style={{width: "20%", margin: "30px auto"}} type='primary' onClick={handleSubmitClick}>
+				Сохранить
+			</Button>
 		</div>
 	);
 };

@@ -4,6 +4,9 @@ import {Button, ColorPicker, FloatButton, Input, Select, Upload} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import classNames from "classnames";
 import {EnterOutlined, QuestionCircleOutlined} from "@ant-design/icons";
+import {useDispatch, useSelector} from "react-redux";
+import {addElement} from "../../slices/botSlice";
+import {useNavigate} from "react-router-dom";
 
 const TabPopup = () => {
 	const [title, setTitle] = useState("");
@@ -13,6 +16,11 @@ const TabPopup = () => {
 	const [font, setFont] = useState(""); // Название шрифта
 	const [color, setColor] = useState("#00aae6"); // Цвет
 	const [showPopup, setShowPopup] = useState(false);
+
+	const {data, services, settings, activeRetriver, activeLlm, prompt} = useSelector(s => s.createBot);
+
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	// Функция обработки загрузки изображения
 	const handleUpload = (type, file) => {
@@ -46,6 +54,26 @@ const TabPopup = () => {
 	const generateFontStyle = () => {
 		if (!font) return null;
 		return <style>{`@import url('https://fonts.googleapis.com/css2?family=${font.replace(/\s/g, "+")}:wght@400;700&display=swap');`}</style>;
+	};
+
+	const handleSubmitClick = () => {
+		const req = {
+			data,
+			services,
+			settings,
+			activeRetriver,
+			activeLlm,
+			prompt,
+		};
+		const res = {
+			title,
+			desc,
+			logo,
+			newLogo,
+			font,
+			color,
+		};
+		dispatch(addElement(res));
 	};
 
 	return (
@@ -177,6 +205,9 @@ const TabPopup = () => {
 					<QuestionCircleOutlined />
 				</Button>
 			</div>
+			<Button style={{width: "20%", margin: "30px auto"}} type='primary' onClick={handleSubmitClick}>
+				Сохранить
+			</Button>
 		</div>
 	);
 };
