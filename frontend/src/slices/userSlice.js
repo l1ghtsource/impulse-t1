@@ -1,47 +1,8 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-// Асинхронные санки
-export const loginUser = createAsyncThunk(
-  "user/loginUser",
-  async (credentials, { rejectWithValue, dispatch }) => {
-    try {
-      await axios.post(
-        "http://51.250.42.179:8000/api/config/login",
-        credentials
-      );
-      // Если сервер не возвращает данные пользователя, берем их из credentials
-      const user = { login: credentials.login };
-      dispatch(setUser(user));
-      return user;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Ошибка авторизации");
-    }
-  }
-);
-
-export const registerUser = createAsyncThunk(
-  "user/registerUser",
-  async (data, { rejectWithValue, dispatch }) => {
-    try {
-      await axios.post(
-        "http://51.250.42.179:8000/api/config/register",
-        data
-      );
-      // Если сервер не возвращает данные пользователя, берем их из data
-      const user = { login: data.login, avatar: data.avatar || "" };
-      dispatch(setUser(user));
-      return user;
-    } catch (error) {
-      return rejectWithValue(error.response?.data || "Ошибка регистрации");
-    }
-  }
-);
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  // isLoggedIn: !!localStorage.getItem("user"),
-  isLoggedIn: true,
-  user: JSON.parse(localStorage.getItem("user")) || 'user',
+  isLoggedIn: !!localStorage.getItem("user"),
+  user: JSON.parse(localStorage.getItem("user")) || null,
   loading: false,
   error: null,
 };
@@ -60,33 +21,29 @@ const userSlice = createSlice({
       state.user = null;
       localStorage.removeItem("user");
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(loginUser.pending, (state) => {
-        state.loading = true;
+    login(state, action) {
+      const { login, password } = action.payload;
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+
+      if (storedUser && storedUser.login === login && storedUser.password === password) {
+        state.isLoggedIn = true;
+        state.user = storedUser;
         state.error = null;
-      })
-      .addCase(loginUser.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      .addCase(registerUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(registerUser.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+      } else {
+        state.error = "Неверный логин или пароль";
+      }
+    },
+    register(state, action) {
+      const { login, password, avatar, email } = action.payload;
+      const newUser = { login, password, avatar, email };
+
+      localStorage.setItem("user", JSON.stringify(newUser));
+      state.isLoggedIn = true;
+      state.user = newUser;
+      state.error = null;
+    },
   },
 });
 
-export const { setUser, logout } = userSlice.actions;
+export const { setUser, logout, loginUser, registerUser } = userSlice.actions;
 export default userSlice.reducer;

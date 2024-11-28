@@ -14,7 +14,7 @@ const AssPage = () => {
 	// Получаем данные из Redux Store
 	const s = useSelector(state => state.bot.items.find(el => el.id === Number(id)));
 	const items = useSelector(state => state.bot.items);
-	console.log();
+	console.log(s);
 	const loading = useSelector(state => state.bot.loading);
 	const chat = items.find(el => el.id === Number(id));
 

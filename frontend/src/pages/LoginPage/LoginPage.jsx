@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Button, Input, Tabs, Spin, Alert} from "antd";
+import {Button, Input, Tabs, Spin, Alert, Upload} from "antd";
+import {UploadOutlined} from "@ant-design/icons";
 import {loginUser, registerUser} from "../../slices/userSlice";
 import styles from "./LoginPage.module.scss";
 
@@ -9,9 +10,10 @@ const LoginPage = () => {
 	const {loading, error} = useSelector(state => state.user);
 	const [tab, setTab] = useState(1);
 	const [formData, setFormData] = useState({
-		login: "",
-		password: "",
-		avatar: "",
+		nickname: "",
+		hashed_password: "",
+		email: "",
+		avatar: null,
 	});
 
 	const tabs = [
@@ -25,6 +27,18 @@ const LoginPage = () => {
 			...prev,
 			[name]: value,
 		}));
+	};
+
+	const handleAvatarUpload = file => {
+		const reader = new FileReader();
+		reader.onload = e => {
+			setFormData(prev => ({
+				...prev,
+				avatar: e.target.result, // Сохраняем Base64 изображение
+			}));
+		};
+		reader.readAsDataURL(file);
+		return false; // Останавливаем автоматическую загрузку
 	};
 
 	const handleRegister = () => {
@@ -66,8 +80,10 @@ const LoginPage = () => {
 									<Input name='email' onChange={handleInputChange} />
 								</div>
 								<div className={styles.item}>
-									<div className={styles.subsubTitle}>Аватарка (URL)</div>
-									<Input name='avatar' onChange={handleInputChange} />
+									<div className={styles.subsubTitle}>Аватарка</div>
+									<Upload beforeUpload={handleAvatarUpload} maxCount={1} accept='image/*'>
+										<Button icon={<UploadOutlined />}>Загрузить аватар</Button>
+									</Upload>
 								</div>
 								<Button type='primary' style={{width: "60%", height: "40px"}} onClick={handleRegister}>
 									Зарегистрироваться
@@ -76,11 +92,11 @@ const LoginPage = () => {
 						:	<div className={styles.consa}>
 								<div className={styles.item}>
 									<div className={styles.subsubTitle}>Логин</div>
-									<Input name='login' onChange={handleInputChange} />
+									<Input name='nickname' onChange={handleInputChange} />
 								</div>
 								<div className={styles.item}>
 									<div className={styles.subsubTitle}>Пароль</div>
-									<Input name='password' type='password' onChange={handleInputChange} />
+									<Input name='hashed_password' type='password' onChange={handleInputChange} />
 								</div>
 								<Button type='primary' style={{width: "30%", height: "40px"}} onClick={handleLogin}>
 									Войти

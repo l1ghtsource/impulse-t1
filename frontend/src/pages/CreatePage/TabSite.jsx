@@ -6,13 +6,14 @@ import classNames from "classnames";
 import {useDispatch, useSelector} from "react-redux";
 import {addElement, fetchData} from "../../slices/botSlice";
 import {useNavigate} from "react-router-dom";
+import {UploadOutlined} from "@ant-design/icons";
 
 const TabSite = () => {
 	const [title, setTitle] = useState("");
 	const [desc, setDesc] = useState("");
 	const [logo, setLogo] = useState(null);
-	const [font, setFont] = useState(""); // Название шрифта
-	const [color, setColor] = useState("#00aae6"); // Цвет\
+	const [font, setFont] = useState("");
+	const [color, setColor] = useState("#00aae6");
 	const navigate = useNavigate();
 
 	const {data, services, settings, activeRetriver, activeLlm, prompt} = useSelector(s => s.createBot);
@@ -20,10 +21,15 @@ const TabSite = () => {
 
 	const dispatch = useDispatch();
 
-	// Функция обработки загрузки изображения
-	const handleUpload = e => {
-		setLogo(e.target.value);
+	const handleUpload = file => {
+		const reader = new FileReader();
+		reader.onload = () => {
+			setLogo(reader.result); // Записываем изображение в виде base64
+		};
+		reader.readAsDataURL(file);
+		return false; // Возвращаем false, чтобы предотвратить автоматическую загрузку файла
 	};
+
 	const handleSubmitClick = () => {
 		const req = {
 			services,
@@ -41,12 +47,12 @@ const TabSite = () => {
 			font,
 			color,
 		};
+		console.log(logo);
 		dispatch(fetchData(req));
 		dispatch(addElement({...res, ...req, id: items?.length + 1, popup: false}));
 		navigate(`/${items?.length + 1}`);
 	};
 
-	// Генерация стиля для динамического подключения шрифта
 	const generateFontStyle = () => {
 		if (!font) return null;
 		return <style>{`@import url('https://fonts.googleapis.com/css2?family=${font.replace(/\s/g, "+")}:wght@400;700&display=swap');`}</style>;
@@ -69,7 +75,7 @@ const TabSite = () => {
 
 	return (
 		<div className={styles.tab}>
-			{generateFontStyle() /* Подключаем шрифт динамически */}
+			{generateFontStyle()}
 			<div className={styles.topTab}>
 				<div className={styles.rigt}>
 					<div className={styles.elem}>
@@ -84,7 +90,9 @@ const TabSite = () => {
 				<div className={styles.rigt}>
 					<div className={styles.elem}>
 						<div className={styles.subsubTitle}>Логотип</div>
-						<Input onChange={e => handleUpload(e)} placeholder='Напишите URL картинки' />
+						<Upload beforeUpload={handleUpload} accept='image/*'>
+							<Button icon={<UploadOutlined />}>Загрузить логотип</Button>
+						</Upload>
 					</div>
 					<div className={styles.elem}>
 						<div className={styles.subsubTitle}>Шрифт</div>
@@ -115,13 +123,13 @@ const TabSite = () => {
 						className={styles.subTitle}
 						style={{
 							fontFamily: font || "inherit",
-							color: color || "black", // Применяем цвет текста
+							color: color || "black",
 						}}>
 						{title || "Lorem Ipsum"}
 					</div>
 					<div
 						style={{
-							fontFamily: font || "inherit", // Применяем цвет текста
+							fontFamily: font || "inherit",
 						}}>
 						{desc || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
 					</div>
@@ -132,7 +140,7 @@ const TabSite = () => {
 							type='primary'
 							className={styles.miniBtn}
 							style={{
-								backgroundColor: color || "#1890ff", // Пример использования цвета для кнопки
+								backgroundColor: color || "#1890ff",
 							}}>
 							Отправить
 						</Button>
