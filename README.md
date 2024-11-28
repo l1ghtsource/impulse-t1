@@ -71,7 +71,13 @@ cd impulse
 ```
 
 ### 2. Проверить установлено ли нужные программы:
-Обязательно npm, node, postresql(локально), docker
+Обязательно npm, node, postgresql(локально), docker
+
+Докер на linux устанавливается через эти команды:
+```
+curl -fsSL https://get.docker.com -o get-docker.sh
+ sudo sh get-docker.sh
+```
 
 ### 3. Заполняем env-зависимости по шаблонам
 Берем нужные ключи
