@@ -12,9 +12,9 @@ Team Members:
 
 Презентация: [тык]()
 
-Веб-сервис: [тык]()
+Веб-сервис: [тык](https://impulse.itatmisis.ru/)
 
-API - [тык]()
+API - [тык](https://impulse.itatmisis.ru/api/docs)
 
 ## Кейс "Окно знаний – цифровой ассистент базы знаний"
 
