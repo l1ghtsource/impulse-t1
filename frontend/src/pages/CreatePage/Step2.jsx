@@ -35,9 +35,6 @@ const Step2 = () => {
 			{tab === 3 ?
 				<TabApi />
 			:	null}
-			<Button style={{width: "20%", margin: "0 auto"}} type='primary'>
-				Сохранить
-			</Button>
 		</>
 	);
 };
