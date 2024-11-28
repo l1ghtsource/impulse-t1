@@ -18,10 +18,7 @@ const initialState = {
         urls:[],
         confluence:[],
         notion:[],
-        figma:[],
         github:[],
-        wiki:[],
-        trello:[],
         youtube:[]
     },
     llm: ['google/gemma-2-9b-it', 'google/gemma-2-27b-it', 'meta-llama/Llama-3.1-8B-Instruct', 'Qwen/Qwen2.5-7B-Instruct', 'Qwen/Qwen2.5-14B-Instruct', 'Vikhrmodels/Vikhr-Nemo-12B-Instruct-R-21-09-24'],
