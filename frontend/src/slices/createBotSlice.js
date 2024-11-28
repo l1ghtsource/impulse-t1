@@ -1,10 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit"
 
+import axios from 'axios';
+
+export const uploadFiles = async (url, fileType, files) => {
+  const formData = new FormData();
+  files.forEach(file => formData.append('files', file)); // Добавляем файлы в FormData
+  formData.append('fileType', fileType); // Добавляем тип файла, если нужно
+
+  try {
+    const response = await axios.post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data; // Возвращаем данные ответа сервера
+  } catch (error) {
+    console.error('Ошибка загрузки файлов:', error);
+    throw error;
+  }
+};
+
 const initialState = {
     data:  {
         txt:[],
         pdf:[],
-        'doc,docx':[],
+        'doc,.docx':[],
         html:[],
         json:[],
         md:[],

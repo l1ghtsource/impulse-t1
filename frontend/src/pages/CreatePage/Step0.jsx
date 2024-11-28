@@ -3,19 +3,20 @@ import React from "react";
 import styles from "./CreatePage.module.scss";
 import {Button} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import {addFile} from "../../slices/createBotSlice";
+import {addFile, uploadFiles} from "../../slices/createBotSlice";
 import ActionButton from "../../components/ActionButton";
 
 const Step0 = ({setStep}) => {
 	const {services, data} = useSelector(s => s.createBot);
 	const dispatch = useDispatch();
 
-	const handleFileChange = (fileType, event) => {
-		const files = event.target.files; // Получаем все выбранные файлы
+	const handleFileChange = async (fileType, event) => {
+		const files = event.target.files; // Получаем выбранные файлы
 		if (files.length > 0) {
-			// Преобразуем FileList в массив, чтобы можно было передать его в экшен
-			const fileArray = Array.from(files);
-			dispatch(addFile({fileType, files: fileArray})); // Отправляем экшен с типом файла и списком файлов
+			const fileArray = Array.from(files); // Преобразуем FileList в массив
+			dispatch(addFile({fileType, files: fileArray})); // Отправляем в Redux
+
+			await uploadFiles("http://51.250.42.179:8000/api/config/uploadfiles", fileType, fileArray);
 		}
 	};
 

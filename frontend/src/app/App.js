@@ -6,7 +6,9 @@ import { ConfigProvider } from 'antd';
 
 const App = () => {
   return (
-    <ConfigProvider>
+    <ConfigProvider theme={{token:{
+      colorPrimary:"#00aae6"
+    }}}>
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>

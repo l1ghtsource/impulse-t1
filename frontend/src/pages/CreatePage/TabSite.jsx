@@ -46,7 +46,7 @@ const TabSite = () => {
 			color,
 		};
 		dispatch(fetchData(req));
-		dispatch(addElement({...res, ...req, id: items?.length + 1}));
+		dispatch(addElement({...res, ...req, id: items?.length + 1, popup: true}));
 		navigate(`/${items?.length + 1}`);
 	};
 
