@@ -3,6 +3,7 @@ import Layout from "../pages/Layout/Layout";
 import CreatePage from "../pages/CreatePage/CreatePage";
 import MainPage from "../pages/MainPage/MainPage";
 import AssPage from "../pages/AssPage/AssPage";
+import PopupAssPage from "../pages/AssPage/PopupAssPage";
 
 const router = createBrowserRouter([
 	{
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
 	{
 		path: "/:id",
 		element: <AssPage />,
+	},
+	{
+		path: "/popup/:id",
+		element: <PopupAssPage />,
 	},
 ]);
 

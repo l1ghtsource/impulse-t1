@@ -6,8 +6,8 @@ const initialState = {
   items: JSON.parse(localStorage.getItem("botSliceState")) || [],
   error: null,
   loading: false,
-  chatloading:false,
-  answer:'',
+  chatloading: false,
+  answer: '',
 };
 
 // Создаем thunk для выполнения POST-запроса
@@ -70,19 +70,29 @@ const botSlice = createSlice({
       state.items.push(action.payload);
       localStorage.setItem("botSliceState", JSON.stringify(state.items));
     },
+    addMessageToChat(state, action) {
+      const { id, newMessages } = action.payload;
+      if (state.items.find(el => el.id === id).messages){
+        state.items.find(el => el.id === id).messages = [...state.items.find(el => el.id === id).messages, ...newMessages];
+      }
+      else {
+        state.items.find(el => el.id === id).messages = newMessages;
+      }
+        localStorage.setItem("botSliceState", JSON.stringify(state.items)); // Обновляем localStorage
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchData.pending, (state) => {
         state.loading = true;
-        state.error = null; // Сбрасываем предыдущие ошибки
+        state.error = null;
       })
       .addCase(fetchData.fulfilled, (state, action) => {
-        state.data = action.payload; // Записываем данные в поле data
+        state.data = action.payload;
         state.loading = false;
       })
       .addCase(fetchData.rejected, (state, action) => {
-        state.error = action.payload; // Записываем ошибку
+        state.error = action.payload;
         state.loading = false;
       })
       .addCase(fetchChatResponse.pending, (state) => {
@@ -90,7 +100,7 @@ const botSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchChatResponse.fulfilled, (state, action) => {
-        state.data = action.payload; // Сохраняем весь ответ
+        state.answer = action.payload.answer; // Сохраняем ответ
         state.chatloading = false;
       })
       .addCase(fetchChatResponse.rejected, (state, action) => {
@@ -100,7 +110,6 @@ const botSlice = createSlice({
   },
 });
 
-export const { addElement } = botSlice.actions;
+export const { addElement, addMessageToChat } = botSlice.actions;
 
-// Редьюсер
 export default botSlice.reducer;
