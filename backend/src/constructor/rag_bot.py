@@ -23,7 +23,7 @@ from langchain.llms import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
 from typing import List, Union, Dict, Any, Optional
 from whisper_model import WhisperModel
-from notion import fetch_and_save_notion_content
+from parsers.notion import fetch_and_save_notion_content
 import os
 
 
