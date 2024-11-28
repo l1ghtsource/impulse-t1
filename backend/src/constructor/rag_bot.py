@@ -132,8 +132,22 @@ class RAGChatBot:
         if not self.conversation_chain:
             raise ValueError('Initialize chatbot with documents first')
         result = self.conversation_chain({'question': query})
+        answer_text = result['answer']
 
-        return result['answer'], result['source_documents']
+        answer_text = answer_text.replace('\n', ' ')
+
+        useful_answer_start = answer_text.find("Полезный ответ:")
+
+        if useful_answer_start != -1:
+            useful_answer = answer_text[useful_answer_start + len("Полезный ответ:"):].strip()
+        else:
+            useful_answer = answer_text
+
+        last_period_index = useful_answer.rfind('.')
+        if last_period_index != -1:
+            useful_answer = useful_answer[:last_period_index].strip()
+
+        return useful_answer, result['source_documents']
 
     def _load_data(self, sources: List[tuple]):
         loaders = []
