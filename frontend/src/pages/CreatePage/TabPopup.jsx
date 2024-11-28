@@ -49,6 +49,7 @@ const TabPopup = () => {
 			label: "Montserrat",
 		},
 	];
+	const items = useSelector(s => s.bot.items);
 
 	// Генерация стиля для динамического подключения шрифта
 	const generateFontStyle = () => {
@@ -74,8 +75,8 @@ const TabPopup = () => {
 			font,
 			color,
 		};
-		dispatch(fetchData(req));
-		dispatch(addElement(res));
+		dispatch(addElement({...res, ...req, id: items?.length + 1}));
+		navigate(`/popup/${items?.length + 1}`);
 	};
 
 	return (
