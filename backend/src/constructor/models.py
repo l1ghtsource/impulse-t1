@@ -1,7 +1,7 @@
 
 from datetime import datetime
 from ..database import Base
-from sqlalchemy import JSON, DateTime, ForeignKey, func
+from sqlalchemy import JSON, DateTime, ForeignKey, func, create_engine
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List, Optional, Dict, Any
 
@@ -71,3 +71,4 @@ class RetrieverModel(Base):
 
     #Relationships
     assistants: Mapped[List['Assistant']] = relationship(back_populates='retriever')
+

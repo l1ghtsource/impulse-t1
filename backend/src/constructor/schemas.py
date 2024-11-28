@@ -1,6 +1,8 @@
 
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
+
+from fastapi import UploadFile
 from pydantic import BaseModel, Field
 
 class AssistantBase(BaseModel):
@@ -85,3 +87,43 @@ class Source(SourceBase):
 
     class Config:
         from_attributes = True
+
+class Prompt(BaseModel):
+    name: Optional[str]
+    value: Optional[str]
+
+class Settings(BaseModel):
+    temp: int
+
+class FileModel(BaseModel):
+    filename: Optional[str]
+    content: Optional[str]
+
+class Item(BaseModel):
+    file: Optional[FileModel]
+
+class DataFiles(BaseModel):
+    txt: Optional[List[Item]] = []
+    pdf: Optional[List[Item]] = []
+    csv: Optional[List[Item]] = []
+    sql: Optional[List[Item]] = []
+    mp3: Optional[List[Item]] = []
+    xls: Optional[List[Item]] = []
+    xlsx: Optional[List[Item]] = []
+
+class Services(BaseModel):
+    urls: Optional[List[str]] = []
+    confluence: Optional[List[str]] = []
+    notion: Optional[List[str]] = []
+    figma: Optional[List[str]] = []
+    github: Optional[List[str]] = []
+    wiki: Optional[List[str]] = []
+    trello: Optional[List[str]] = []
+    youtube: Optional[List[str]] = []
+
+class RequestData(BaseModel):
+    services: Services
+    prompt: Optional[Prompt]
+    settings: Settings
+    activeLlm: Optional[str]
+    activeRetriver: Optional[str]
