@@ -12,9 +12,9 @@ Team Members:
 
 Презентация: [тык](https://drive.google.com/file/d/1Yzh4Qd_NESOhQyuyPVrfYPStead8e6uM/view?usp=sharing)
 
-Веб-сервис: [тык](https://impulse.itatmisis.ru/)
+Веб-сервис: [тык](http://51.250.42.179:3000)
 
-Swagger API: [тык](https://impulse.itatmisis.ru/api/docs)
+Swagger API: [тык](http://51.250.42.179:8000/api/docs)
 
 ## Кейс "Окно знаний – цифровой ассистент базы знаний"
 
