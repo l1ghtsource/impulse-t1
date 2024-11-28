@@ -5,7 +5,7 @@ import TextArea from "antd/es/input/TextArea";
 import classNames from "classnames";
 import {EnterOutlined, QuestionCircleOutlined} from "@ant-design/icons";
 import {useDispatch, useSelector} from "react-redux";
-import {addElement} from "../../slices/botSlice";
+import {addElement, fetchData} from "../../slices/botSlice";
 import {useNavigate} from "react-router-dom";
 
 const TabPopup = () => {
@@ -58,9 +58,10 @@ const TabPopup = () => {
 
 	const handleSubmitClick = () => {
 		const req = {
-			data,
 			services,
-			settings,
+			settings: {
+				temp: 0,
+			},
 			activeRetriver,
 			activeLlm,
 			prompt,
@@ -73,6 +74,7 @@ const TabPopup = () => {
 			font,
 			color,
 		};
+		dispatch(fetchData(req));
 		dispatch(addElement(res));
 	};
 

@@ -3,12 +3,16 @@ import { createSlice } from "@reduxjs/toolkit"
 const initialState = {
     data:  {
         txt:[],
-        pdf:[], 
+        pdf:[],
+        'doc,docx':[],
+        html:[],
+        json:[],
+        md:[],
         csv:[], 
-        sql:[],
+        xml:[],
         mp3:[],
-        xls:[],
-        xlsx:[]
+        'jpeg,.jpg,.png':[],
+        'xls,.xlsx':[],
     },
     services: {
         urls:[],
@@ -20,7 +24,7 @@ const initialState = {
         trello:[],
         youtube:[]
     },
-    llm: ['google/gemma-2-9b-it', 'google/gemma-2-27b-it', 'meta-llama/Llama-3.1-8B-Instruct', 'Qwen/Qwen2.5-7B-Instruct, Qwen/Qwen2.5-14B-Instruct', 'Vikhrmodels/Vikhr-Nemo-12B-Instruct-R-21-09-24'],
+    llm: ['google/gemma-2-9b-it', 'google/gemma-2-27b-it', 'meta-llama/Llama-3.1-8B-Instruct', 'Qwen/Qwen2.5-7B-Instruct', 'Qwen/Qwen2.5-14B-Instruct', 'Vikhrmodels/Vikhr-Nemo-12B-Instruct-R-21-09-24'],
     retrivers: ['sentence-transformers/all-MiniLM-L6-v2', 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2', 'cointegrated/rubert-tiny2'],
     activeLlm:null,
     activeRetriver:null,

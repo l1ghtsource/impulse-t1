@@ -4,16 +4,19 @@ import {Button, ColorPicker, Input, Select, Upload} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import classNames from "classnames";
 import {useDispatch, useSelector} from "react-redux";
-import {addElement} from "../../slices/botSlice";
+import {addElement, fetchData} from "../../slices/botSlice";
+import {useNavigate} from "react-router-dom";
 
 const TabSite = () => {
 	const [title, setTitle] = useState("");
 	const [desc, setDesc] = useState("");
 	const [logo, setLogo] = useState(null);
 	const [font, setFont] = useState(""); // Название шрифта
-	const [color, setColor] = useState("#00aae6"); // Цвет
+	const [color, setColor] = useState("#00aae6"); // Цвет\
+	const navigate = useNavigate();
 
 	const {data, services, settings, activeRetriver, activeLlm, prompt} = useSelector(s => s.createBot);
+	const items = useSelector(s => s.bot.items);
 
 	const dispatch = useDispatch();
 
@@ -27,9 +30,10 @@ const TabSite = () => {
 	};
 	const handleSubmitClick = () => {
 		const req = {
-			data,
 			services,
-			settings,
+			settings: {
+				temp: 0,
+			},
 			activeRetriver,
 			activeLlm,
 			prompt,
@@ -41,7 +45,9 @@ const TabSite = () => {
 			font,
 			color,
 		};
-		dispatch(addElement(res));
+		dispatch(fetchData(req));
+		dispatch(addElement({...res, ...req, id: items?.length + 1}));
+		navigate(`/${items?.length + 1}`);
 	};
 
 	// Генерация стиля для динамического подключения шрифта
