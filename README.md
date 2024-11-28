@@ -10,7 +10,7 @@ Team Members:
 4. **Ильдар Ишбулатов** - Frontend
 5. **Кирилл Рыжичкин** - ML Engineer
 
-Презентация: [тык](https://drive.google.com/file/d/1Yzh4Qd_NESOhQyuyPVrfYPStead8e6uM/view?usp=sharing)
+Презентация: [тык](https://disk.yandex.ru/i/HmzdRS5ghq--1A)
 
 Веб-сервис: [тык](http://51.250.42.179:3000)
 
