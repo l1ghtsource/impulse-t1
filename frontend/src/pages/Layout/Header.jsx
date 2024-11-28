@@ -26,7 +26,7 @@ const Header = () => {
 						</div>
 					</div>
 					<div className={styles.right}>
-						<div className={styles.profielIcon} style={{backgroundColor: "inherit"}}></div>
+						<div className={styles.profielIcon} style={{backgroundColor: "inherit", backgroundImage: `url(${user.avatar})`, backgroundSize: "45px", backgroundPosition: "center", backgroundRepeat: "no-repeat"}}></div>
 						<div className={styles.profileText}>{user.login}</div>
 					</div>
 				</>

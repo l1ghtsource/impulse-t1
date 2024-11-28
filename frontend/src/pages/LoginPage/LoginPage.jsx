@@ -1,19 +1,21 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Button, Input, Tabs, Spin, Alert, Upload} from "antd";
+import {Button, Input, Tabs, Alert, Upload} from "antd";
+import {login, register} from "../../slices/userSlice";
 import {UploadOutlined} from "@ant-design/icons";
-import {loginUser, registerUser} from "../../slices/userSlice";
 import styles from "./LoginPage.module.scss";
+import {useNavigate} from "react-router-dom";
 
 const LoginPage = () => {
 	const dispatch = useDispatch();
-	const {loading, error} = useSelector(state => state.user);
+	const {error} = useSelector(state => state.user);
+	const navigate = useNavigate();
 	const [tab, setTab] = useState(1);
 	const [formData, setFormData] = useState({
-		nickname: "",
-		hashed_password: "",
+		login: "",
+		password: "",
 		email: "",
-		avatar: null,
+		avatar: "", // Ссылка на файл (или base64, если нужно)
 	});
 
 	const tabs = [
@@ -29,32 +31,36 @@ const LoginPage = () => {
 		}));
 	};
 
-	const handleAvatarUpload = file => {
-		const reader = new FileReader();
-		reader.onload = e => {
+	// Обработчик загрузки файла
+	const handleFileUpload = info => {
+		// Берем последний загруженный файл
+		const file = info.file.originFileObj;
+		if (file) {
+			const avatarUrl = URL.createObjectURL(file); // Создание временной ссылки
 			setFormData(prev => ({
 				...prev,
-				avatar: e.target.result, // Сохраняем Base64 изображение
+				avatar: avatarUrl,
 			}));
-		};
-		reader.readAsDataURL(file);
-		return false; // Останавливаем автоматическую загрузку
+			console.log(avatarUrl);
+		}
 	};
 
 	const handleRegister = () => {
-		if (!formData.nickname || !formData.hashed_password) {
+		if (!formData.login || !formData.password || !formData.email) {
 			alert("Заполните все поля для регистрации!");
 			return;
 		}
-		dispatch(registerUser(formData));
+		dispatch(register(formData));
+		navigate("/");
 	};
 
 	const handleLogin = () => {
-		if (!formData.nickname || !formData.hashed_password) {
+		if (!formData.login || !formData.password) {
 			alert("Введите логин и пароль!");
 			return;
 		}
-		dispatch(loginUser({nickname: formData.nickname, hashed_password: formData.hashed_password}));
+		dispatch(login({login: formData.login, password: formData.password}));
+		navigate("/");
 	};
 
 	return (
@@ -64,46 +70,47 @@ const LoginPage = () => {
 				<div className={styles.col}>
 					<Tabs items={tabs} onChange={v => setTab(v)} />
 					{error && <Alert type='error' message={error} />}
-					<Spin spinning={loading}>
-						{tab === 1 ?
-							<div className={styles.consa}>
-								<div className={styles.item}>
-									<div className={styles.subsubTitle}>Логин</div>
-									<Input name='nickname' onChange={handleInputChange} />
-								</div>
-								<div className={styles.item}>
-									<div className={styles.subsubTitle}>Пароль</div>
-									<Input name='hashed_password' type='password' onChange={handleInputChange} />
-								</div>
-								<div className={styles.item}>
-									<div className={styles.subsubTitle}>Email</div>
-									<Input name='email' onChange={handleInputChange} />
-								</div>
-								<div className={styles.item}>
-									<div className={styles.subsubTitle}>Аватарка</div>
-									<Upload beforeUpload={handleAvatarUpload} maxCount={1} accept='image/*'>
-										<Button icon={<UploadOutlined />}>Загрузить аватар</Button>
-									</Upload>
-								</div>
-								<Button type='primary' style={{width: "60%", height: "40px"}} onClick={handleRegister}>
-									Зарегистрироваться
-								</Button>
+					{tab === 1 ?
+						<div className={styles.consa}>
+							<div className={styles.item}>
+								<div className={styles.subsubTitle}>Логин</div>
+								<Input name='login' onChange={handleInputChange} />
 							</div>
-						:	<div className={styles.consa}>
-								<div className={styles.item}>
-									<div className={styles.subsubTitle}>Логин</div>
-									<Input name='nickname' onChange={handleInputChange} />
-								</div>
-								<div className={styles.item}>
-									<div className={styles.subsubTitle}>Пароль</div>
-									<Input name='hashed_password' type='password' onChange={handleInputChange} />
-								</div>
-								<Button type='primary' style={{width: "30%", height: "40px"}} onClick={handleLogin}>
-									Войти
-								</Button>
+							<div className={styles.item}>
+								<div className={styles.subsubTitle}>Пароль</div>
+								<Input name='password' type='password' onChange={handleInputChange} />
 							</div>
-						}
-					</Spin>
+							<div className={styles.item}>
+								<div className={styles.subsubTitle}>Email</div>
+								<Input name='email' onChange={handleInputChange} />
+							</div>
+							<div className={styles.item}>
+								<div className={styles.subsubTitle}>Аватар</div>
+								<Upload
+									onChange={e => handleFileUpload(e)}
+									accept='image/*' // Принимаем только изображения
+								>
+									<Button icon={<UploadOutlined />}>Загрузить аватар</Button>
+								</Upload>
+							</div>
+							<Button type='primary' style={{width: "60%", height: "40px"}} onClick={handleRegister}>
+								Зарегистрироваться
+							</Button>
+						</div>
+					:	<div className={styles.consa}>
+							<div className={styles.item}>
+								<div className={styles.subsubTitle}>Логин</div>
+								<Input name='login' onChange={handleInputChange} />
+							</div>
+							<div className={styles.item}>
+								<div className={styles.subsubTitle}>Пароль</div>
+								<Input name='password' type='password' onChange={handleInputChange} />
+							</div>
+							<Button type='primary' style={{width: "30%", height: "40px"}} onClick={handleLogin}>
+								Войти
+							</Button>
+						</div>
+					}
 				</div>
 			</div>
 		</div>
