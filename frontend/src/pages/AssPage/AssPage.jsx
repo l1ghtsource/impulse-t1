@@ -1,53 +1,76 @@
-import React from "react";
-
+import React, {useState} from "react";
 import styles from "./AssPage.module.scss";
 import TextArea from "antd/es/input/TextArea";
-import {Button} from "antd";
-import {useLocation} from "react-router-dom";
+import {Button, Spin, message} from "antd";
+import {useParams} from "react-router-dom";
+import {useSelector, useDispatch} from "react-redux";
+import {fetchChatResponse} from "../../slices/botSlice"; // Путь может отличаться
 
 const AssPage = () => {
-	const location = useLocation();
+	const {id} = useParams();
+	const dispatch = useDispatch();
+
+	const s = useSelector(state => state.bot.items.find(el => el.id === Number(id)));
+	const loading = useSelector(state => state.bot.loading);
+	const [inputValue, setInputValue] = useState(""); // Стейт для ввода текста
+	const [outputValue, setOutputValue] = useState(""); // Стейт для ответа
+	const answer = useSelector(state => state.bot.answer);
+
+	const handleSend = async () => {
+		try {
+			const response = await dispatch(fetchChatResponse({question: inputValue})).unwrap();
+			setOutputValue(response.answer); // Устанавливаем текст ответа
+			message.success("Сообщение отправлено!");
+		} catch (error) {
+			message.error(`Ошибка: ${error}`);
+		}
+	};
+
+	if (loading) {
+		return <Spin />;
+	}
 
 	return (
 		<div className={styles.page}>
 			<div
 				className={styles.previewLogo}
 				style={{
-					backgroundImage: logo ? `url(${logo})` : undefined,
+					backgroundImage: s.logo ? `url(${s.logo})` : undefined,
 					backgroundSize: "contain",
 					backgroundRepeat: "no-repeat",
 					backgroundPosition: "center",
-					backgroundColor: logo ? "inherit" : "gray",
+					backgroundColor: s.logo ? "inherit" : "gray",
 				}}></div>
 			<div
 				className={styles.subTitle}
 				style={{
-					fontFamily: font || "inherit",
-					color: color || "black", // Применяем цвет текста
+					fontFamily: s.font || "inherit",
+					color: s.color || "black",
 				}}>
-				{title || "Lorem Ipsum"}
+				{s.title || "Lorem Ipsum"}
 			</div>
 			<div
 				style={{
-					fontFamily: font || "inherit", // Применяем цвет текста
+					fontFamily: s.font || "inherit",
 				}}>
-				{desc || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+				{s.desc || "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
 			</div>
 			<div className={styles.previewEl}>
 				<div>Input</div>
-				<TextArea />
+				<TextArea value={inputValue} onChange={e => setInputValue(e.target.value)} />
 				<Button
 					type='primary'
 					className={styles.miniBtn}
 					style={{
-						backgroundColor: color || "#1890ff", // Пример использования цвета для кнопки
-					}}>
+						backgroundColor: s.color || "#1890ff",
+					}}
+					onClick={handleSend}>
 					Отправить
 				</Button>
 			</div>
 			<div className={styles.previewEl}>
 				<div>Output</div>
-				<TextArea disabled />
+				<TextArea value={outputValue} disabled />
 			</div>
 		</div>
 	);

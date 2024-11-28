@@ -116,14 +116,12 @@ class DataFiles(BaseModel):
     xlsx: Optional[List[Item]] = []
 
 class Services(BaseModel):
-    urls: Optional[List[str]] = []
     confluence: Optional[List[str]] = []
     notion: Optional[List[str]] = []
-    figma: Optional[List[str]] = []
     github: Optional[List[str]] = []
-    wiki: Optional[List[str]] = []
-    trello: Optional[List[str]] = []
     youtube: Optional[List[str]] = []
+    urls: Optional[List[str]] = []
+
 
 class RequestData(BaseModel):
     services: Services
