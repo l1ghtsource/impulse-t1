@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import baseUrl from "../../config";
 
 // Проверяем localStorage и получаем данные или используем пустой массив
 const initialState = {
@@ -16,7 +17,7 @@ export const fetchData = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        "http://51.250.42.179:8000/api/config/addServicesAndPrompt",
+        baseUrl + "/api/config/addServicesAndPrompt",
         {
           method: "POST",
           headers: {
@@ -42,7 +43,7 @@ export const fetchChatResponse = createAsyncThunk(
   "botSlice/fetchChatResponse",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://51.250.42.179:8000/api/config/chat", {
+      const response = await fetch(baseUrl + "/api/config/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
