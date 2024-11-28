@@ -16,7 +16,7 @@ const Step0 = ({setStep}) => {
 			const fileArray = Array.from(files); // Преобразуем FileList в массив
 			dispatch(addFile({fileType, files: fileArray})); // Отправляем в Redux
 
-			await uploadFiles("http://51.250.42.179:8000/api/config/uploadfiles", fileType, fileArray);
+			await uploadFiles("https://impulse.itatmisis.ru/api/config/uploadfiles", fileType, fileArray);
 		}
 	};
 
