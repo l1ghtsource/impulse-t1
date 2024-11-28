@@ -60,7 +60,7 @@ const TabSite = () => {
 						<div className={styles.subsubTitle}>Логотип</div>
 						<Upload
 							beforeUpload={file => {
-								handleUpload({file});
+								handleUpload(file);
 								return false;
 							}}
 							showUploadList={false}>
@@ -90,6 +90,7 @@ const TabSite = () => {
 							backgroundSize: "contain",
 							backgroundRepeat: "no-repeat",
 							backgroundPosition: "center",
+							backgroundColor: logo ? "inherit" : "gray",
 						}}></div>
 					<div
 						className={styles.subTitle}
