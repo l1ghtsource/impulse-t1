@@ -76,7 +76,7 @@ cd impulse
 Докер на linux устанавливается через эти команды:
 ```
 curl -fsSL https://get.docker.com -o get-docker.sh
- \sudo sh get-docker.sh
+sudo sh get-docker.sh
 ```
 
 ### 3. Заполняем env-зависимости по шаблонам
