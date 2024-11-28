@@ -70,26 +70,17 @@ git clone https://github.com/Kin1599/impulse.git
 cd impulse
 ```
 
-### 2. Создание и активация виртуального окружения
-Создайте виртуальное окружение, чтобы изолировать зависимости проекта:
+### 2. Проверить установлено ли нужные программы:
+Обязательно npm, node, postresql(локально), docker
 
-- **Windows**:
-  ```bash
-  python -m venv venv
-  venv\Scripts\activate
-  ```
+### 3. Заполняем env-зависимости по шаблонам
+Берем нужные ключи
 
-- **Linux/MacOS**:
-  ```bash
-  python3 -m venv venv
-  source venv/bin/activate
-  ```
+### 4. Запускаем docker compose
+Открываем терминал и прописываем в корне проекта docker compose -f docker-compose-not-traefik.yml up --build -d
+Если же у вас есть домен, то прописываем в .env корне проекта домен и запускаем уже в терминале команду: docker compose up --build -d
 
-### 3. Установка зависимостей
-Установите необходимые библиотеки, указанные в файле `requirements.txt`:
-```bash
-pip install -r requirements.txt
-```
-
-### 4. ДАЛЬШЕ ДОПИШИТЕ
+### 5. Переходим на сервер
+Если есть домен, то переходим по нему и радуемся
+Если нет, то по локальному адресу + :3000 для фронтенда и :8000/api/docs для перехода в Swagger
 
