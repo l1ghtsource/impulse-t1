@@ -123,7 +123,7 @@ async def upload_file(request_data: RequestData):
                 sources_to_load.append((service_type, url))
     bot.add_sources(sources_to_load)
     #bot.change_prompt(request_data.prompt.value)
-
+    bot.change_model(request_data.activeLlm)
     return {"results": f"services added"}
 
 @router.post("/uploadfiles/")
