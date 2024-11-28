@@ -1,7 +1,9 @@
 
 from datetime import datetime
+from tokenize import String
+
 from ..database import Base
-from sqlalchemy import JSON, DateTime, ForeignKey, func, create_engine
+from sqlalchemy import JSON, DateTime, ForeignKey, func, create_engine, Column, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List, Optional, Dict, Any
 
@@ -95,4 +97,23 @@ class RetrieverModel(Base):
 
     #Relationships
     assistants: Mapped[List['Assistant']] = relationship(back_populates='retriever')
+
+
+class Bot(Base):
+    __tablename__ = 'bot'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, unique=True)
+
+    files: Mapped[Dict[str, Any]] = mapped_column(JSON)
+    services: Mapped[Dict[str, Any]] = mapped_column(JSON)
+    prompt_name: Mapped[str]
+    prompt_value: Mapped[str]
+    settings_temp: Mapped[int]
+    active_llm: Mapped[str]
+    active_retriver: Mapped[str]
+    index_storage: Mapped[str]
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
+
 

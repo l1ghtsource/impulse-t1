@@ -201,7 +201,7 @@ class RAGChatBot:
                         raise RuntimeError(f"Error processing .mp3 file '{source}': {e}")
                 else:
                     raise ValueError(f'Unsupported file format: {source}')
-            elif mode == 'url':
+            elif mode == 'url' or mode == 'urls':
                 if source.startswith(('http://', 'https://')):
                     try:
                         loaders.append(WebBaseLoader(source))
@@ -271,7 +271,8 @@ class RAGChatBot:
         else:
             llm = GigaChat(
                 credentials=gigachat_api_key,
-                verify_ssl_certs=False
+                verify_ssl_certs=False,
+                model='GigaChat-Pro'
             )
 
         return llm
